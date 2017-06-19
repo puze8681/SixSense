@@ -16,11 +16,25 @@
             android:id="@+id/txtTest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/btnTest"
-            android:text="TEST"
+        <LinearLayout
+            android:weightSum="2"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+            <Button
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:id="@+id/touch"
+                android:text="TOUCH"
+                android:layout_height="match_parent" />
+            <Button
+                android:layout_weight="1"
+                android:id="@+id/drag"
+                android:text="DRAG"
+                android:layout_width="0dp"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/txtResult"
             android:layout_width="match_parent"

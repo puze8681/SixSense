@@ -330,40 +330,74 @@ public class Vibrate {
         return whatBraille;
     }
 
-    public static void makeVibe(){
-        Vibe(makeBraille());
+    public static void makeVibe(int c){
+        Vibe(makeBraille(), c);
     }
 
-    private static void Vibe(int[] s){
-        for(int ss : s){
-            switch(ss){
-                //000
-                case 0:
-                    break;
-                //001
-                case 1:
-                    break;
-                //010
-                case 2:
-                    break;
-                //011
-                case 3:
-                    break;
-                //100
-                case 4:
-                    break;
-                //101
-                case 5:
-                    break;
-                //110
-                case 6:
-                    break;
-                //111
-                case 7:
-                    break;
-                //null
-                case 8:
-                    break;
+    private static void Vibe(int[] s, int c){
+        if(c == 1){
+            for(int ss : s){
+                switch(ss){
+                    //000
+                    case 0:
+                        break;
+                    //001
+                    case 1:
+                        break;
+                    //010
+                    case 2:
+                        break;
+                    //011
+                    case 3:
+                        break;
+                    //100
+                    case 4:shortVibe();
+                        break;
+                    //101
+                    case 5:shortVibe();
+                        break;
+                    //110
+                    case 6:shortVibe();shortVibe();
+                        break;
+                    //111
+                    case 7:shortVibe();shortVibe();shortVibe();
+                        break;
+                    //null
+                    case 8:
+                        break;
+                }
+            }
+        }else if(c == 2){
+            for(int ss : s){
+                switch(ss){
+                    //000
+                    case 0:
+                        break;
+                    //001
+                    case 1:longVibe();
+                        break;
+                    //010
+                    case 2:shortVibe();
+                        break;
+                    //011
+                    case 3:shortVibe();shortVibe();
+                        break;
+                    //100
+                    case 4:
+                        break;
+                    //101
+                    case 5:longVibe();
+                        break;
+                    //110
+                    case 6:
+                        break;
+                    //111
+                    case 7:
+                        break;
+                    //null
+                    case 8:
+                        break;
+                }
             }
         }
     }

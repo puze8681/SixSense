@@ -83,10 +83,18 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
             }
         };
         txtTest.addTextChangedListener(textWatcher);
-        mainBinding.btnTest.setOnClickListener(new View.OnClickListener() {
+
+        mainBinding.touch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Vibrate.makeVibe();
+                Vibrate.makeVibe(1);
+            }
+        });
+
+        mainBinding.drag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Vibrate.makeVibe(2);
             }
         });
 
