@@ -1,36 +1,40 @@
 package com.example.parktaejun.sixsense;
 
+import android.content.Intent;
+
+import java.util.ArrayList;
+
 /**
  * Created by parktaejun on 2017. 6. 11..
  */
 public class Vibrate {
 
-    private static int[] whatBraille;
+    private static ArrayList<Integer> whatBraille = new ArrayList<Integer>();
     private int caseNum = 0;
 
     private static void put(int i){
-        whatBraille[whatBraille.length] = i;
+        whatBraille.add(i);
     }
     private static void put(int i, int j){
-        whatBraille[whatBraille.length] = i;
-        whatBraille[whatBraille.length] = j;
+        whatBraille.add(i);
+        whatBraille.add(j);
     }
     private static void put(int i, int j, int k, int h){
-        whatBraille[whatBraille.length] = i;
-        whatBraille[whatBraille.length] = j;
-        whatBraille[whatBraille.length] = k;
-        whatBraille[whatBraille.length] = h;
+        whatBraille.add(i);
+        whatBraille.add(j);
+        whatBraille.add(k);
+        whatBraille.add(h);
     }
     private static void put(int i, int j, int k, int h, int m, int n){
-        whatBraille[whatBraille.length] = i;
-        whatBraille[whatBraille.length] = j;
-        whatBraille[whatBraille.length] = k;
-        whatBraille[whatBraille.length] = h;
-        whatBraille[whatBraille.length] = m;
-        whatBraille[whatBraille.length] = n;
+        whatBraille.add(i);
+        whatBraille.add(j);
+        whatBraille.add(k);
+        whatBraille.add(h);
+        whatBraille.add(m);
+        whatBraille.add(n);
     }
 
-    public static int[] makeBraille(){
+    public static ArrayList<Integer> makeBraille(){
         char[][] whereSound = Hangul.getWhere();
         int len = whereSound.length;
         for(int i = 0; i < len; i++){
@@ -332,9 +336,10 @@ public class Vibrate {
 
     public static void makeVibe(int c){
         Vibe(makeBraille(), c);
+        whatBraille.clear();
     }
 
-    private static void Vibe(int[] s, int c){
+    private static void Vibe(ArrayList<Integer> s, int c){
         if(c == 1){
             for(int ss : s){
                 switch(ss){
