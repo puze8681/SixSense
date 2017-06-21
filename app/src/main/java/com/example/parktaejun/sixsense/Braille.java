@@ -64,7 +64,6 @@ public class Braille {
         gesture = null;
         MainActivity.initBraille();
     }
-
     private static void gestureToBraille(boolean gesture[]){
         for(boolean g:gesture){
             if(g==true){
