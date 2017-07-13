@@ -46,6 +46,7 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
     private Context mContext;
     public static boolean IsSendSMS = false;
     private static String SMS_Content = "";
+    String returnValue = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +74,6 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
         TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                Toast.makeText(getApplicationContext(),smsText.getText(),Toast.LENGTH_SHORT).show();
-                String returnValue = "";
                 if(Hangul.IsHangul(smsText.getText().toString())) {
                     for (int i = 0; i < smsText.getText().length(); i++) {
                         String alphabet = Hangul.HangulAlphabet(Hangul.split(smsText.getText().charAt(i)));
@@ -86,7 +85,7 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                Toast.makeText(getApplicationContext(),smsText.getText(),Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -99,19 +98,6 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
             @Override
             public void onClick(View v) {
                 sendSMS();
-            }
-        });
-
-        mainBinding.touch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Vibrate.makeVibe(1);
-            }
-        });
-        mainBinding.drag.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Vibrate.makeVibe(2);
             }
         });
 
@@ -238,7 +224,7 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
     }
 
     public void sendSMS(){
-        String smsNum = "01037020628";
+        String smsNum = "01097908310";
         String smsText = SMS_Content;
 
         if (smsNum.length()>0 && smsText.length()>0){
