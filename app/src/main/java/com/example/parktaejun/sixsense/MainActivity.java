@@ -2,16 +2,22 @@ package com.example.parktaejun.sixsense;
 
 
 import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Vibrator;
 import android.support.v4.view.GestureDetectorCompat;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +29,8 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
     ActivityMainBinding mainBinding;
 
     private GestureDetectorCompat mDetector;
-    private EditText txtTest;
+    private EditText smsText;
+    private Button smsSend;
     private TextView txtResult;
     private TextView countBraille;
     public boolean dragUpDown;
@@ -36,6 +43,9 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
     private static TextView ind_six;
     private static TextView text;
     public static Vibrator vibrator;
+    private Context mContext;
+    public static boolean IsSendSMS = false;
+    private static String SMS_Content = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +55,9 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
         mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         Toast.makeText(getApplicationContext(),"Run",Toast.LENGTH_SHORT).show();
 
-        txtTest = mainBinding.txtTest;
+        smsText = mainBinding.txtSend;
+        smsSend = mainBinding.btnSend;
+
         txtResult = mainBinding.txtResult;
         countBraille = mainBinding.countBraille;
         ind_one = mainBinding.indexOne;
@@ -61,11 +73,11 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
         TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                Toast.makeText(getApplicationContext(),txtTest.getText(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),smsText.getText(),Toast.LENGTH_SHORT).show();
                 String returnValue = "";
-                if(Hangul.IsHangul(txtTest.getText().toString())) {
-                    for (int i = 0; i < txtTest.getText().length(); i++) {
-                        String alphabet = Hangul.HangulAlphabet(Hangul.split(txtTest.getText().charAt(i)));
+                if(Hangul.IsHangul(smsText.getText().toString())) {
+                    for (int i = 0; i < smsText.getText().length(); i++) {
+                        String alphabet = Hangul.HangulAlphabet(Hangul.split(smsText.getText().charAt(i)));
                         returnValue += alphabet;
                     }
                     txtResult.setText(returnValue);
@@ -82,7 +94,13 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
 
             }
         };
-        txtTest.addTextChangedListener(textWatcher);
+        smsText.addTextChangedListener(textWatcher);
+        smsSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendSMS();
+            }
+        });
 
         mainBinding.touch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +108,6 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
                 Vibrate.makeVibe(1);
             }
         });
-
         mainBinding.drag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,5 +235,68 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
         ind_four.setText("");
         ind_five.setText("");
         ind_six.setText("");
+    }
+
+    public void sendSMS(){
+        String smsNum = "01037020628";
+        String smsText = SMS_Content;
+
+        if (smsNum.length()>0 && smsText.length()>0){
+            sendSMS(smsNum, smsText);
+        }else{
+            Toast.makeText(this, "모두 입력해 주세요", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void sendSMS(String smsNumber, String smsText){
+        PendingIntent sentIntent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_SENT_ACTION"), 0);
+        PendingIntent deliveredIntent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_DELIVERED_ACTION"), 0);
+
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                switch(getResultCode()){
+                    case Activity.RESULT_OK:
+                        // 전송 성공
+                        Toast.makeText(mContext, "전송 완료", Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                        // 전송 실패
+                        Toast.makeText(mContext, "전송 실패", Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_NO_SERVICE:
+                        // 서비스 지역 아님
+                        Toast.makeText(mContext, "서비스 지역이 아닙니다", Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_RADIO_OFF:
+                        // 무선 꺼짐
+                        Toast.makeText(mContext, "무선(Radio)가 꺼져있습니다", Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_NULL_PDU:
+                        // PDU 실패
+                        Toast.makeText(mContext, "PDU Null", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        }, new IntentFilter("SMS_SENT_ACTION"));
+
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                switch (getResultCode()){
+                    case Activity.RESULT_OK:
+                        // 도착 완료
+                        Toast.makeText(mContext, "SMS 도착 완료", Toast.LENGTH_SHORT).show();
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        // 도착 안됨
+                        Toast.makeText(mContext, "SMS 도착 실패", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        }, new IntentFilter("SMS_DELIVERED_ACTION"));
+
+        SmsManager mSmsManager = SmsManager.getDefault();
+        mSmsManager.sendTextMessage(smsNumber, null, smsText, sentIntent, deliveredIntent);
     }
 }

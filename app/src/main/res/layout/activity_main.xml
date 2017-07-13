@@ -12,10 +12,15 @@
         android:orientation="vertical"
         tools:context="com.example.parktaejun.sixsense.MainActivity">
         <EditText
-            android:hint="TEXT HINT"
-            android:id="@+id/txtTest"
+        android:hint="SMS MESSAGE"
+        android:id="@+id/txtSend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/btnSend"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="send"/>
         <LinearLayout
             android:weightSum="2"
             android:orientation="horizontal"
