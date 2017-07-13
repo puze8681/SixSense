@@ -1,6 +1,7 @@
 package com.example.parktaejun.sixsense;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -533,14 +534,21 @@ public class Vibrate {
     //짧은 진동 (1초)
     private static void shortVibe() {
         MainActivity.vibrator.vibrate(500);
+        breakVibe();
     }
 
     //긴 진동 (3초)
     private static void longVibe() {
         MainActivity.vibrator.vibrate(1500);
+        breakVibe();
     }
 
-    private static void initPosition() {
-        position = 0;
+    private static void breakVibe(){
+        Handler hd = new Handler();
+        hd.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+            }
+        }, 3000);
     }
 }
