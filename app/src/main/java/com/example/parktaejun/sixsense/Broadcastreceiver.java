@@ -9,6 +9,7 @@ import android.telephony.SmsMessage;
 import android.widget.Toast;
 
 public class Broadcastreceiver extends BroadcastReceiver {
+    public static String smsText;
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();
@@ -29,6 +30,7 @@ public class Broadcastreceiver extends BroadcastReceiver {
                         msgs[i].getMessageBody().toString()
                         +"\n";
             }
+            smsText = str;
             Toast.makeText(context,
                     str, Toast.LENGTH_LONG).show();
         }

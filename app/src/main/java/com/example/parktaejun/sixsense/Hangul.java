@@ -24,6 +24,14 @@ public class Hangul {
             {}
     };
 
+    public static void initWhereSound(){
+        whereSound = new char[][]{
+                {},
+                {},
+                {}
+        };
+    }
+
     public static char[][] getWhere(){
         return whereSound;
     }
