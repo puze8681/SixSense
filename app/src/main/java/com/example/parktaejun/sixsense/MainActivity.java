@@ -29,7 +29,7 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
     ActivityMainBinding mainBinding;
 
     private GestureDetectorCompat mDetector;
-    private EditText smsText;
+    private static EditText smsText;
     private Button smsSend;
     private TextView txtResult;
     private TextView countBraille;
@@ -41,7 +41,6 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
     private static TextView ind_four;
     private static TextView ind_five;
     private static TextView ind_six;
-    private static TextView text;
     public static Vibrator vibrator;
     private Context mContext;
     public static boolean IsSendSMS = false;
@@ -67,7 +66,6 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
         ind_four = mainBinding.indexFour;
         ind_five = mainBinding.indexFive;
         ind_six = mainBinding.indexSix;
-        text = mainBinding.showText;
         vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
 
 
@@ -210,10 +208,10 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
 
     //텍스트뷰에 텍스트를 추가함
     public static void addFirstText(char t){
-        text.setText(text.getText().toString()+t);
+        smsText.setText(smsText.getText().toString()+t);
     }
-    public static void addMiddleText(char t){text.setText(text.getText().toString().substring(0,text.length()-2)+t);}
-    public static void addLastText(char t){text.setText(text.getText().toString().substring(0,text.length()-2)+t);}
+    public static void addMiddleText(char t){smsText.setText(smsText.getText().toString().substring(0,smsText.length()-2)+t);}
+    public static void addLastText(char t){smsText.setText(smsText.getText().toString().substring(0,smsText.length()-2)+t);}
 
     //점자를 초기화함
     public static void initBraille(){
