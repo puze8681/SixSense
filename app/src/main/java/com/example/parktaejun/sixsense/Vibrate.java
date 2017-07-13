@@ -11,9 +11,8 @@ import java.util.ArrayList;
  */
 public class Vibrate {
 
-    private static int position = 0;
-    private static ArrayList<Integer> whatBraille = new ArrayList<Integer>();
-    private int caseNum = 0;
+    private static int position = 0; // whatBraille 리스트의 포지션값
+    private static ArrayList<Integer> whatBraille = new ArrayList<Integer>(); //문장을 점자로 표현한것을 숫자로 나열한것
 
     private static void put(int i) {
         whatBraille.add(i);
@@ -41,10 +40,11 @@ public class Vibrate {
     }
 
     public static ArrayList<Integer> makeBraille() {
-        char[][] whereSound = Hangul.getWhere();
-        int len = whereSound.length;
+        char[][] whereSound = Hangul.getWhere(); //Hangul 클래스의 whereSound 변수를 받아옴
+        int len = whereSound[0].length; // whereSound의 길이 (글자의 길이)
         for (int i = 0; i < len; i++) {
             for (int j = 0; j < 3; j++) {
+                //초성만 있는 경우
                 if (whereSound[0][i] != ' ' && whereSound[1][i] == ' ' && whereSound[2][i] == ' ') {
                     switch (whereSound[0][i]) {
                         case 'ㄱ':
@@ -105,7 +105,9 @@ public class Vibrate {
                             put(7, 7, 0, 1, 0, 5);
                             break;
                     }
-                } else if (whereSound[0][i] == ' ' && whereSound[1][i] != ' ' && whereSound[2][i] == ' ') {
+                }
+                //중성만 있는 경우
+                else if (whereSound[0][i] == ' ' && whereSound[1][i] != ' ' && whereSound[2][i] == ' ') {
                     switch (whereSound[1][i]) {
                         case 'ㅏ':
                             put(7, 7, 6, 1);
@@ -171,7 +173,9 @@ public class Vibrate {
                             put(7, 7, 5, 2);
                             break;
                     }
-                } else if (whereSound[0][i] == ' ' && whereSound[1][i] == ' ' && whereSound[2][i] != ' ') {
+                }
+                // 종성만 잇는 경우
+                else if (whereSound[0][i] == ' ' && whereSound[1][i] == ' ' && whereSound[2][i] != ' ') {
                     switch (whereSound[2][i]) {
                         case 'ㄳ':
                             put(4, 0, 1, 0);
@@ -207,9 +211,14 @@ public class Vibrate {
                             put(6, 0, 1, 0);
                             break;
                     }
-                } else if (whereSound[0][i] == ' ' && whereSound[1][i] == ' ' && whereSound[2][i] == ' ') {
+                }
+                //공백
+                else if (whereSound[0][i] == ' ' && whereSound[1][i] == ' ' && whereSound[2][i] == ' ') {
                     put(8);
-                } else {
+                }
+                //정상적인 글자
+                else {
+                    //초성일 때
                     if (j == 0) {
                         switch (whereSound[j][i]) {
                             case 'ㄱ':
@@ -270,7 +279,9 @@ public class Vibrate {
                                 put(0, 1, 0, 5);
                                 break;
                         }
-                    } else if (j == 1) {
+                    }
+                    //중성일 때
+                    else if (j == 1) {
                         switch (whereSound[j][i]) {
                             case 'ㅏ':
                                 put(6, 1);
@@ -339,7 +350,9 @@ public class Vibrate {
                                 put(8);
                                 break;
                         }
-                    } else if (j == 2) {
+                    }
+                    //종성일 때
+                    else if (j == 2) {
                         switch (whereSound[j][i]) {
                             case 'ㄱ':
                                 put(4, 0);
@@ -442,14 +455,18 @@ public class Vibrate {
         return whatBraille;
     }
 
+    //진동을 만드는 함수
     public static void makeVibe(int c) {
         Vibe(makeBraille(), c);
+
+        //whatBraille의 크기만큼 진동을 출력했다면 whatBraille와 initWhereSound를 초기화함
         if(position == whatBraille.size()){
             whatBraille.clear();
             Hangul.initWhereSound();
         }
     }
 
+    //진동을 출력하는 함수
     private static void Vibe(ArrayList<Integer> s, int c) {
         if (c == 1) {
             switch (s.get(position)) {
