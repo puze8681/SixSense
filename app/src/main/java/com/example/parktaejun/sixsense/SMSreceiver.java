@@ -27,21 +27,21 @@ public class SMSreceiver extends AppCompatActivity implements GestureDetector.On
 
         smsreceiverBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         smsreceiverBinding.txtContent.setText(Broadcastreceiver.smsText);
-        vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
-        mDetector = new GestureDetectorCompat(this,this);
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        mDetector = new GestureDetectorCompat(this, this);
         // Set the gesture detector as the double tap
         // listener.
         mDetector.setOnDoubleTapListener(this);
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event){
+    public boolean onTouchEvent(MotionEvent event) {
         this.mDetector.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
 
     public boolean onDown(MotionEvent e) {
-        Toast.makeText(getApplicationContext(),"Touch",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Touch", Toast.LENGTH_SHORT).show();
         Vibrate.makeVibe(1);
         return true;
     }
@@ -68,25 +68,26 @@ public class SMSreceiver extends AppCompatActivity implements GestureDetector.On
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        Toast.makeText(getApplicationContext(),"Fling",Toast.LENGTH_SHORT).show();
-        if(Math.abs(e1.getX() - e2.getX()) < 250) {
-            if (e1.getY() - e2.getY() > 0) {
-                //위로 드래그
-                Toast.makeText(getApplication(), "UP", Toast.LENGTH_SHORT).show();
-                Vibrate.makeVibe(2);
-            } else if (e2.getY() - e1.getY() > 0) {
-                //아래로 드래그
-                Toast.makeText(getApplicationContext(), "DOWN", Toast.LENGTH_SHORT).show();
-            }
-        } else if(Math.abs(e1.getY() - e2.getY())< 250){
-            if (e1.getX() - e2.getX() > 0) {
-                //왼쪽 드래그
-                Toast.makeText(getApplication(), "LEFT", Toast.LENGTH_SHORT).show();
-            } else if (e2.getX() - e1.getX() > 0) {
-                //오른쪽 드래고
-                Toast.makeText(getApplicationContext(), "RIGHT", Toast.LENGTH_SHORT).show();
-            }
+        Toast.makeText(getApplicationContext(), "Fling", Toast.LENGTH_SHORT).show();
+        if (Math.abs(e1.getX() - e2.getX()) < 250 && (e1.getY() - e2.getY() > 0)) {
+            //위로 드래그
+            Toast.makeText(getApplication(), "UP", Toast.LENGTH_SHORT).show();
+            Vibrate.makeVibe(2);
+        } else if (Math.abs(e1.getX() - e2.getX()) < 250 && (e2.getY() - e1.getY() > 0)) {
+            //아래로 드래그
+            Toast.makeText(getApplicationContext(), "DOWN", Toast.LENGTH_SHORT).show();
+        } else if (Math.abs(e1.getY() - e2.getY()) < 250 && (e1.getX() - e2.getX() > 0)) {
+            //왼쪽 드래그
+            Toast.makeText(getApplication(), "LEFT", Toast.LENGTH_SHORT).show();
+        } else if (Math.abs(e1.getY() - e2.getY()) < 250 && (e2.getX() - e1.getX() > 0)) {
+            //오른쪽 드래그
+            Toast.makeText(getApplicationContext(), "RIGHT", Toast.LENGTH_SHORT).show();
+        } else if ((e2.getX() - e1.getX() > 0) && (e2.getY() - e1.getY() > 0)){
+            //오른쪽 아래 대각선 드래그
+            Toast.makeText(getApplicationContext(), "RIGHT DOWN", Toast.LENGTH_SHORT).show();
+            finish();
         }
+
         return true;
     }
 
@@ -105,7 +106,7 @@ public class SMSreceiver extends AppCompatActivity implements GestureDetector.On
         return false;
     }
 
-    public static final void throwToast(){
+    public static final void throwToast() {
         Toast.makeText(mContext, "Drag 모션이 없습니다", Toast.LENGTH_SHORT).show();
     }
 }
