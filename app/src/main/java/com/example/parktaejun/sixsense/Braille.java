@@ -21,60 +21,71 @@ public class Braille {
     private static final String[] Special = {
             "111111", "001001", "001100","000001"
     };
-    private static int count = 1;
-    private static int SFcount = 0;
-    private static int SLcount = 0;
-    private static int Scount = 0;
+    private static int count = 1; // 점자를 입력하는 칸의 횟수
+    private static int SFcount = 0; // 초성에서 특별한 경우를 체크해줌 / 0 : 일반, 1 : 쌍자음
+    private static int SLcount = 0; // 종성에서 특별한 경우를 체크해줌 / 0 : 일반, 1 : 'ㄱ'겹받침, 2 : 'ㄴ'겹받침, 3 : 'ㄹ'겹받침, 4 : 'ㅂ'겹받침
+    private static int Scount = 0; // 예외의 특별한 경우를 체크해줌  / 0 : 일반, 1 : 자음 혹은 모음이 단독으로 쓰일 때, 2 : 모음자 뒤에 '예'가 나올 떄 사이에 적거나 ‘ㅑ, ㅘ, ㅜ, ㅝ’ 뒤에 '애'가 이어 나올 떄 사이에 적는 붙임표
     private static char word[] = {
             ' ',
             ' ',
             ' '
-    };
-    private static boolean gesture[] = new boolean[6];
-    private static String braille;
-    private static char text;
-    private static int at;
+    }; // 각 배열에 초성, 중성, 종성이 들어감
 
+    private static boolean gesture[] = new boolean[6]; // 점자 6칸에 위로 드래그, 아래로 드래그를 나타냄
+    private static String braille = ""; // 점자 6칸을 각 형태소로 나타냄
+    private static char text; // 각 형태소를 합쳐 한 글자로 나타냄
+    private static int at; // 점자의 위치가 초성인지 중성인지 종성인지 나타냄
+
+    // 점자의 몇번째 칸인지 확인해줌
     public static int countCheck(){
         return count;
     }
 
+    // 제스처가 위 드래그인지, 아래 드래그인지 파악하여 제스처 배열에 값을 넣어줌
     public static void recGesture(boolean gesture){
         if(count != 6){
             if(gesture){
                 Braille.gesture[count-1] = true;
                 count++;
             }else{
-                Braille.gesture[count-1] = true;
+                Braille.gesture[count-1] = false;
                 count++;
             }
         }else{
             isSix();
-        }
+        } // 배열 6칸이 다 찼는지 확인하여 isSix() 함수를 실행함
     }
 
+    // 배열 6칸이 다 찼는지 확인하여 1. 점자를 형태소로 바꿈, 2. 제스처 변수를 초기화, 3. 메인액티비티에 텍스트 추가
     private static void isSix(){
-        gestureToBraille(Braille.gesture);
-        initGesture();
-        MainActivity.addText(text);
+        gestureToBraille(Braille.gesture); // 점자를 형태소로 바꿈
+        initGesture(); // 제스처 변수를 초기화
+        MainActivity.addFirstText(text); // 매인액티비티에 텍스트 추가
     }
 
+    // 제스처를 초기화함
     private static void initGesture(){
-        count = 0;
-        gesture = null;
-        MainActivity.initBraille();
+        count = 0; // 점자 칸의 차례를 초기화
+        for(int i = 0; i < gesture.length; i++){
+            gesture[i] = false; // 제스처 변수를 모두 거짓으로 초기화
+        }
+        MainActivity.initBraille(); // 점자가 나타나는 텍스트를 모두 빈 텍스트로 초기화
     }
+
+    // 제스처를 점자(형태소)로 나타냄
     private static void gestureToBraille(boolean gesture[]){
         for(boolean g:gesture){
-            if(g==true){
-                braille += '1';
+            if(g){
+                braille += '1'; // 제스처가 참(위로 드래그)이면 1을 추가함
             }else{
-                braille += '0';
+                braille += '0'; // 제스처가 거짓(아래로 드래그)이면 0을 추가함
             }
         }
         brailleToText(braille);
+        braille = "";
     }
 
+    // 형태소를 텍스트로 바꿔줌
     private static void brailleToText(String b){
         switch (hangulAt(b)){
             //초성일 때
@@ -394,11 +405,12 @@ public class Braille {
     //점자를 인식하여 초성, 중성, 종성인지 파악하는 메소드
     private static int hangulAt(String b) {
         if(Arrays.asList(FirstSound).contains(b)){
-            if(Scount == 0 || word[2] == ' ')initWord();
             at = 1;
         }else if(Arrays.asList(MiddleSound).contains(b)){
+            if(Scount == 0 || word[2] == ' ')initMiddleWord(); // 특별한 경우가 없이 다음 글자를 위해서 글자를 조합하는 메소드
             at = 2;
         }else if(Arrays.asList(LastSound).contains(b)){
+            if(Scount == 0)initLastWord();
             at = 3;
         }else if(Arrays.asList(Special).contains(b)){
             at = 4;
@@ -406,9 +418,16 @@ public class Braille {
         return at;
     }
 
-    //word 배열을 초기화하는 메소드
+    // 글자를 조합하여 메인액티비티에 추가하고, word 배열을 초기화함
     private static void initWord(){
-        MainActivity.addText(Hangul.CombineHangul(word));
-        for(int i = 0; i < 3; i++)word[i]=' ';
+        MainActivity.addFirstText(Hangul.CombineHangul(word)); // 글자를 조합하여 메인액티비티에 추가함
+        for(int i = 0; i < 3; i++)word[i]=' '; // word 배열을 초기화함
+    }
+    private static void initMiddleWord(){
+        MainActivity.addMiddleText(Hangul.CombineHangul(word)); // 글자를 조합하여 메인액티비티에 추가함
+    }
+    private static void initLastWord(){
+        MainActivity.addLastText(Hangul.CombineHangul(word)); // 글자를 조합하여 메인액티비티에 추가함
+        for(int i = 0; i < 3; i++)word[i]=' '; // word 배열을 초기화함
     }
 }

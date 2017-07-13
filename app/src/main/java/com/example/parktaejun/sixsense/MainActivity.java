@@ -209,9 +209,11 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
     }
 
     //텍스트뷰에 텍스트를 추가함
-    public static void addText(char t){
+    public static void addFirstText(char t){
         text.setText(text.getText().toString()+t);
     }
+    public static void addMiddleText(char t){text.setText(text.getText().toString().substring(0,text.length()-2)+t);}
+    public static void addLastText(char t){text.setText(text.getText().toString().substring(0,text.length()-2)+t);}
 
     //점자를 초기화함
     public static void initBraille(){
