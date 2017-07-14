@@ -19,6 +19,7 @@ public class SMSreceiver extends AppCompatActivity implements GestureDetector.On
     private GestureDetectorCompat mDetector;
     public static Vibrator vibrator;
     private static Context mContext;
+    String returnValue = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,14 @@ public class SMSreceiver extends AppCompatActivity implements GestureDetector.On
         // Set the gesture detector as the double tap
         // listener.
         mDetector.setOnDoubleTapListener(this);
+
+        if(Hangul.IsHangul(smsreceiverBinding.txtContent.getText().toString())) {
+            for (int i = 0; i < smsreceiverBinding.txtContent.getText().length(); i++) {
+                String alphabet = Hangul.HangulAlphabet(Hangul.split(smsreceiverBinding.txtContent.getText().charAt(i)));
+                returnValue += alphabet;
+            }
+            smsreceiverBinding.alphabet.setText(returnValue);
+        }
     }
 
     @Override

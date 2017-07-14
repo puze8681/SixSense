@@ -72,13 +72,7 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
         TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if(Hangul.IsHangul(smsText.getText().toString())) {
-                    for (int i = 0; i < smsText.getText().length(); i++) {
-                        String alphabet = Hangul.HangulAlphabet(Hangul.split(smsText.getText().charAt(i)));
-                        returnValue += alphabet;
-                    }
-                    txtResult.setText(returnValue);
-                }
+
             }
 
             @Override
@@ -141,28 +135,28 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         Toast.makeText(getApplicationContext(),"Fling",Toast.LENGTH_SHORT).show();
+        countBraille.setText(Integer.toString((Braille.countCheck())));
         if(Math.abs(e1.getX() - e2.getX()) < 250) {
             if (e1.getY() - e2.getY() > 0) {
                 Toast.makeText(getApplication(), "UP", Toast.LENGTH_SHORT).show();
-                countBraille.setText(Integer.toString((Braille.countCheck())));
                 dragUpDown = true;
                 switch (Braille.countCheck()){
-                    case 1:
+                    case 0:
                         ind_one.setText("UP");
                         break;
-                    case 2:
+                    case 1:
                         ind_two.setText("UP");
                         break;
-                    case 3:
+                    case 2:
                         ind_three.setText("UP");
                         break;
-                    case 4:
+                    case 3:
                         ind_four.setText("UP");
                         break;
-                    case 5:
+                    case 4:
                         ind_five.setText("UP");
                         break;
-                    case 6:
+                    case 5:
                         ind_six.setText("UP");
                         break;
                 }
@@ -173,22 +167,22 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
                 countBraille.setText(Integer.toString((Braille.countCheck())));
                 dragUpDown = false;
                 switch (Braille.countCheck()){
-                    case 1:
+                    case 0:
                         ind_one.setText("DOWN");
                         break;
-                    case 2:
+                    case 1:
                         ind_two.setText("DOWN");
                         break;
-                    case 3:
+                    case 2:
                         ind_three.setText("DOWN");
                         break;
-                    case 4:
+                    case 3:
                         ind_four.setText("DOWN");
                         break;
-                    case 5:
+                    case 4:
                         ind_five.setText("DOWN");
                         break;
-                    case 6:
+                    case 5:
                         ind_six.setText("DOWN");
                         break;
                 }
@@ -207,11 +201,9 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
     }
 
     //텍스트뷰에 텍스트를 추가함
-    public static void addFirstText(char t){
-        smsText.setText(smsText.getText().toString()+t);
-    }
-    public static void addMiddleText(char t){smsText.setText(smsText.getText().toString().substring(0,smsText.length()-2)+t);}
-    public static void addLastText(char t){smsText.setText(smsText.getText().toString().substring(0,smsText.length()-2)+t);}
+    public static void addFirstText(char t){smsText.setText(smsText.getText().toString()+t);}
+    public static void addMiddleText(char t){smsText.setText(smsText.getText().toString().substring(0,smsText.length()-1)+t);}
+    public static void addLastText(char t){smsText.setText(smsText.getText().toString().substring(0,smsText.length()-1)+t);}
 
     //점자를 초기화함
     public static void initBraille(){
