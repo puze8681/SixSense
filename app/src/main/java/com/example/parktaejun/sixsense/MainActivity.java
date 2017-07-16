@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.parktaejun.sixsense.ContactFunction.SMSreceiver;
 import com.example.parktaejun.sixsense.MainFunction.Braille;
 import com.example.parktaejun.sixsense.databinding.ActivityMainBinding;
 
@@ -206,8 +207,6 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
     public static void addMiddleText(char t){smsText.setText(smsText.getText().toString().substring(0,smsText.length()-1)+t);}
     public static void addLastText(char t){smsText.setText(smsText.getText().toString().substring(0,smsText.length()-1)+t);}
     public static void addNumber(int n){smsText.setText(smsText.getText().toString()+Integer.toString(n));}
-    public static void addNumber(char c){smsText.setText(smsText.getText().toString()+c);}
-
 
     //점자를 초기화함
     public static void initBraille(){

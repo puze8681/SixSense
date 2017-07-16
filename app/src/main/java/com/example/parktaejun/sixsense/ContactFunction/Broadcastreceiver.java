@@ -1,4 +1,4 @@
-package com.example.parktaejun.sixsense;
+package com.example.parktaejun.sixsense.ContactFunction;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.widget.Toast;
 
-public class Broadcastreceiver extends BroadcastReceiver {
+public class  Broadcastreceiver extends BroadcastReceiver {
     public static String smsText;
     @Override
     public void onReceive(Context context, Intent intent) {

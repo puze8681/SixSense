@@ -3,7 +3,7 @@ package com.example.parktaejun.sixsense.MainFunction;
 import android.os.Handler;
 
 import com.example.parktaejun.sixsense.MainActivity;
-import com.example.parktaejun.sixsense.SMSreceiver;
+import com.example.parktaejun.sixsense.ContactFunction.SMSreceiver;
 
 import java.util.ArrayList;
 
