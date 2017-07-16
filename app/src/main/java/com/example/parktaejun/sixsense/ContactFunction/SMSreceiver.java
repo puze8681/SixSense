@@ -42,7 +42,6 @@ public class SMSreceiver extends AppCompatActivity implements GestureDetector.On
                 String alphabet = Hangul.HangulAlphabet(Hangul.split(smsreceiverBinding.txtContent.getText().charAt(i)));
                 returnValue += alphabet;
             }
-            smsreceiverBinding.alphabet.setText(returnValue);
         }
     }
 

@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.parktaejun.sixsense.ContactFunction.Broadcastreceiver;
 import com.example.parktaejun.sixsense.MainFunction.Braille;
+import com.example.parktaejun.sixsense.MainFunction.Hangul;
 import com.example.parktaejun.sixsense.MainFunction.Vibrate;
 import com.example.parktaejun.sixsense.PhoneBook.PhoneBookData;
 import com.example.parktaejun.sixsense.databinding.ActivityPhoneBookBinding;
@@ -40,6 +41,7 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
     ActivityPhoneBookBinding binding;
     private static ArrayList<PhoneBookData> items = new ArrayList<>();
     int position = 0;
+    String returnValue = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +153,7 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
             }
         }
         initDisplay(p);
+        initBraille();
     }
 
     @Override
@@ -177,23 +180,32 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
     private void nextDisplay(char g) {
         if (g == 'n') {
             position++;
-            if(position > items.size()){
+            if (position > items.size()) {
                 position--;
                 vibrator.vibrate(500);
-            }else{
+            } else {
                 initDisplay(position);
             }
         } else if (g == 'b') {
             position--;
-            if(position < items.size()){
+            if (position < items.size()) {
                 position++;
                 vibrator.vibrate(500);
-            }else{
+            } else {
                 initDisplay(position);
             }
         } else {
             Toast.makeText(this, "Draw Gesture Again, Please", Toast.LENGTH_SHORT).show();
             vibrator.vibrate(1200);
+        }
+    }
+
+    private void initBraille() {
+        if (Hangul.IsHangul(items.get(position).getPhoneNum() + " " + items.get(position).getDisplayName())) {
+            for (int i = 0; i < (items.get(position).getPhoneNum() + " " + items.get(position).getDisplayName()).length(); i++) {
+                String alphabet = Hangul.HangulAlphabet(Hangul.split((items.get(position).getPhoneNum() + " " + items.get(position).getDisplayName()).charAt(i)));
+                returnValue += alphabet;
+            }
         }
     }
 
@@ -205,7 +217,9 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
 
     @Override
     public boolean onDown(MotionEvent e) {
-        return false;
+        Toast.makeText(getApplicationContext(), "Touch", Toast.LENGTH_SHORT).show();
+        Vibrate.makeVibe(1);
+        return true;
     }
 
     @Override
