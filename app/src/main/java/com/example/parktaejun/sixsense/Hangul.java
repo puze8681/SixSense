@@ -82,6 +82,7 @@ public class Hangul {
     //초성 중성 종성을 받아와 글자를 조합하는 메소드
     public static char CombineHangul(char[] c) //종성이 없어도 줘야함
     {
+        if((c[0]==' ') && (c[1]==' ') && (c[2]==' ')) return ' ';
         int[] hindex = new int[3];
         for (int i = 0; i < FirstSound.length; i++) {
             if (FirstSound[i] == c[0]) {

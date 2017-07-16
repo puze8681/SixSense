@@ -240,7 +240,7 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
                         break;
                     case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
                         // 전송 실패
-                        Toast.makeText(mContext, "전송 실패", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "전송 실패"                                                                         , Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NO_SERVICE:
                         // 서비스 지역 아님
@@ -263,8 +263,10 @@ public class MainActivity extends Activity implements GestureDetector.OnGestureL
             public void onReceive(Context context, Intent intent) {
                 switch (getResultCode()){
                     case Activity.RESULT_OK:
-                        // 도착 완료
+                        // 도착 완료ㅎ
                         Toast.makeText(mContext, "SMS 도착 완료", Toast.LENGTH_SHORT).show();
+                        Intent smsIntent = new Intent(MainActivity.this, SMSreceiver.class);
+                        startActivity(smsIntent);
                         break;
                     case Activity.RESULT_CANCELED:
                         // 도착 안됨
