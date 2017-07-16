@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.widget.Toast;
 
-public class  Broadcastreceiver extends BroadcastReceiver {
+import com.example.parktaejun.sixsense.PushActivity;
+
+public class SMS_BroadCastReceiver extends BroadcastReceiver {
     public static String smsText;
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -16,11 +18,8 @@ public class  Broadcastreceiver extends BroadcastReceiver {
         String str = ""; // 출력할 문자열 저장
         if (bundle != null) { // 수신된 내용이 있으면
             // 실제 메세지는 Object타입의 배열에 PDU 형식으로 저장됨
-
             Object [] pdus = (Object[])bundle.get("pdus");
-
-            SmsMessage[] msgs
-                    = new SmsMessage[pdus.length];
+            SmsMessage[] msgs = new SmsMessage[pdus.length];
             for (int i = 0; i < msgs.length; i++) {
                 // PDU 포맷으로 되어 있는 메시지를 복원합니다.
                 msgs[i] = SmsMessage
@@ -33,6 +32,8 @@ public class  Broadcastreceiver extends BroadcastReceiver {
             smsText = str;
             Toast.makeText(context,
                     str, Toast.LENGTH_LONG).show();
+            Intent pushIntent = new Intent(context, PushActivity.class);
+            context.startActivity(pushIntent);
         }
     }
 }

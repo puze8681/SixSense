@@ -2,6 +2,7 @@ package com.example.parktaejun.sixsense;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -20,8 +21,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
-import com.example.parktaejun.sixsense.ContactFunction.Broadcastreceiver;
-import com.example.parktaejun.sixsense.MainFunction.Braille;
+import com.example.parktaejun.sixsense.ContactFunction.SMS_BroadCastReceiver;
 import com.example.parktaejun.sixsense.MainFunction.Hangul;
 import com.example.parktaejun.sixsense.MainFunction.Vibrate;
 import com.example.parktaejun.sixsense.PhoneBook.PhoneBookData;
@@ -32,14 +32,16 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class PhoneBookActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
 
     private GestureDetectorCompat mDetector;
     private Vibrator vibrator;
-    Broadcastreceiver receiver;
+    SMS_BroadCastReceiver receiver;
     Context context;
     ActivityPhoneBookBinding binding;
-    private static ArrayList<PhoneBookData> items = new ArrayList<>();
+    private static ArrayList<PhoneBookData> PBitems = new ArrayList<>();
+
     int position = 0;
     String returnValue = "";
 
@@ -75,7 +77,7 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
 
     private void initApp(int p) {
 
-        receiver = new Broadcastreceiver();
+        receiver = new SMS_BroadCastReceiver();
         registerReceiver(receiver, new IntentFilter());
 
         SharedPreferences sharedPreferences = getSharedPreferences("hello world", Context.MODE_PRIVATE);
@@ -127,14 +129,14 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
                 data.setDisplayName(name);
                 data.setPhoneNum(num);
 
-                items.add(data);
+                PBitems.add(data);
 
                 nCursor.close();
             }
             clsCursor.close();
 
             Gson gson = new Gson();
-            String json = gson.toJson(items);
+            String json = gson.toJson(PBitems);
             Log.d("puze", json);
             sharedPreferencesEditor.putString("contacts", json);
             sharedPreferencesEditor.apply();
@@ -146,12 +148,13 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
             Log.d("puze", json);
             if (json != null) {
                 Gson gson = new Gson();
-                items = gson.fromJson(json, new TypeToken<List<PhoneBookData>>() {
+                PBitems = gson.fromJson(json, new TypeToken<List<PhoneBookData>>() {
                 }.getType());
-                Log.d("puze", items.get(0).toString());
-                items.addAll(items);
+                Log.d("puze", PBitems.get(0).toString());
+                PBitems.addAll(PBitems);
             }
         }
+
         initDisplay(p);
         initBraille();
     }
@@ -173,14 +176,14 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
     }
 
     private void initDisplay(int p) {
-        binding.phoneNumber.setText(items.get(p).getPhoneNum());
-        binding.displayName.setText(items.get(p).getDisplayName());
+        binding.phoneNumber.setText(PBitems.get(p).getPhoneNum());
+        binding.displayName.setText(PBitems.get(p).getDisplayName());
     }
 
     private void nextDisplay(char g) {
         if (g == 'n') {
             position++;
-            if (position > items.size()) {
+            if (position > PBitems.size()) {
                 position--;
                 vibrator.vibrate(500);
             } else {
@@ -188,7 +191,7 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
             }
         } else if (g == 'b') {
             position--;
-            if (position < items.size()) {
+            if (position < PBitems.size()) {
                 position++;
                 vibrator.vibrate(500);
             } else {
@@ -198,12 +201,13 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
             Toast.makeText(this, "Draw Gesture Again, Please", Toast.LENGTH_SHORT).show();
             vibrator.vibrate(1200);
         }
+        initBraille();
     }
 
     private void initBraille() {
-        if (Hangul.IsHangul(items.get(position).getPhoneNum() + " " + items.get(position).getDisplayName())) {
-            for (int i = 0; i < (items.get(position).getPhoneNum() + " " + items.get(position).getDisplayName()).length(); i++) {
-                String alphabet = Hangul.HangulAlphabet(Hangul.split((items.get(position).getPhoneNum() + " " + items.get(position).getDisplayName()).charAt(i)));
+        if (Hangul.IsHangul(PBitems.get(position).getPhoneNum() + " " + PBitems.get(position).getDisplayName())) {
+            for (int i = 0; i < (PBitems.get(position).getPhoneNum() + " " + PBitems.get(position).getDisplayName()).length(); i++) {
+                String alphabet = Hangul.HangulAlphabet(Hangul.split((PBitems.get(position).getPhoneNum() + " " + PBitems.get(position).getDisplayName()).charAt(i)));
                 returnValue += alphabet;
             }
         }
@@ -262,12 +266,18 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
             nextDisplay('n');
         } else if ((e2.getX() - e1.getX() > 0) && (e2.getY() - e1.getY() > 0)) {
             //오른쪽 아래 대각선 드래그
-            Toast.makeText(getApplicationContext(), "RIGHT DOWN", Toast.LENGTH_SHORT).show();
-            finish();
+            Toast.makeText(getApplicationContext(), "message sending activity", Toast.LENGTH_SHORT).show();
+            Intent smActivityIntent = new Intent(PhoneBookActivity.this, SendMessageActivity.class);
+            smActivityIntent.putExtra("number", this.PBitems.get(position).getPhoneNum());
+            startActivity(smActivityIntent);
+        } else if ((e1.getX() - e2.getX() > 0) && (e1.getY() - e2.getY() > 0)) {
+            //왼쪽 위 대각선 드래그
+            Toast.makeText(getApplicationContext(), "message sending activity", Toast.LENGTH_SHORT).show();
+            Intent scActivityIntent = new Intent(PhoneBookActivity.this, SMSContentActivity.class);
+            startActivity(scActivityIntent);
         } else {
             Toast.makeText(getApplication(), "nothing on gesture", Toast.LENGTH_SHORT).show();
         }
-
         return true;
     }
 }

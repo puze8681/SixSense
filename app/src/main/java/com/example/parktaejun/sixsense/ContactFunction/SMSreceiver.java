@@ -10,7 +10,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
-import com.example.parktaejun.sixsense.ContactFunction.Broadcastreceiver;
 import com.example.parktaejun.sixsense.MainFunction.Hangul;
 import com.example.parktaejun.sixsense.MainFunction.Vibrate;
 import com.example.parktaejun.sixsense.R;
@@ -30,7 +29,7 @@ public class SMSreceiver extends AppCompatActivity implements GestureDetector.On
         setContentView(R.layout.activity_smsreceiver);
 
         smsreceiverBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        smsreceiverBinding.txtContent.setText(Broadcastreceiver.smsText);
+        smsreceiverBinding.txtContent.setText(SMS_BroadCastReceiver.smsText);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         mDetector = new GestureDetectorCompat(this, this);
         // Set the gesture detector as the double tap
