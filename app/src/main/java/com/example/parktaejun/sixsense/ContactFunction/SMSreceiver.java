@@ -97,7 +97,6 @@ public class SMSreceiver extends AppCompatActivity implements GestureDetector.On
             Toast.makeText(getApplicationContext(), "RIGHT DOWN", Toast.LENGTH_SHORT).show();
             finish();
         }
-
         return true;
     }
 

@@ -1,6 +1,6 @@
 package com.example.parktaejun.sixsense.MainFunction;
 
-import com.example.parktaejun.sixsense.MainActivity;
+import com.example.parktaejun.sixsense.SendMessageActivity;
 
 import java.util.Arrays;
 
@@ -64,7 +64,7 @@ public class Braille {
         for (int i = 0; i < gesture.length; i++) {
             gesture[i] = false; // 제스처 변수를 모두 거짓으로 초기화
         }
-        MainActivity.initBraille(); // 점자가 나타나는 텍스트를 모두 빈 텍스트로 초기화
+        SendMessageActivity.initBraille(); // 점자가 나타나는 텍스트를 모두 빈 텍스트로 초기화
     }
 
     // 제스처를 점자(형태소)로 나타냄
@@ -588,23 +588,23 @@ public class Braille {
 
     // 초성 글자를 조합하여 메인액티비티에 추가하고, word 배열을 초기화함
     private static void initWord() {
-        MainActivity.addFirstText(Hangul.CombineHangul(word)); // 글자를 조합하여 메인액티비티에 추가함
+        SendMessageActivity.addFirstText(Hangul.CombineHangul(word)); // 글자를 조합하여 메인액티비티에 추가함
     }
 
     // 초성 글자를 조합하여 메인액티비티에 추가하고, word 배열을 초기화함
     private static void initMiddleWord() {
-        MainActivity.addMiddleText(Hangul.CombineHangul(word)); // 글자를 조합하여 메인액티비티에 추가함
+        SendMessageActivity.addMiddleText(Hangul.CombineHangul(word)); // 글자를 조합하여 메인액티비티에 추가함
     }
 
     // 초성 글자를 조합하여 메인액티비티에 추가하고, word 배열을 초기화함
     private static void initLastWord() {
-        MainActivity.addLastText(Hangul.CombineHangul(word)); // 글자를 조합하여 메인액티비티에 추가함
+        SendMessageActivity.addLastText(Hangul.CombineHangul(word)); // 글자를 조합하여 메인액티비티에 추가함
     }
 
 
     // 숫자를 텍스트에 추가
     private static void initNumber(int n){
-        MainActivity.addNumber(n);
+        SendMessageActivity.addNumber(n);
         for (int i = 0; i < 3; i++) word[i] = ' '; // word 배열을 초기화함
     }
 

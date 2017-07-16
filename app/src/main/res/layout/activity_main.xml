@@ -10,24 +10,13 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:orientation="vertical"
-        tools:context="com.example.parktaejun.sixsense.MainActivity">
-        <EditText
+        tools:context="com.example.parktaejun.sixsense.SendMessageActivity">
+        <TextView
         android:hint="SMS MESSAGE"
         android:id="@+id/txtSend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/btnSend"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="send"/>
 
-        <TextView
-            android:id="@+id/txtResult"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Display Text Here"
-            android:textAlignment="center"/>
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
             android:layout_height="20dp" />
