@@ -1,5 +1,6 @@
 package com.example.parktaejun.sixsense;
 
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -19,6 +20,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+import com.example.parktaejun.sixsense.ContactFunction.EarPlug_BroadCastReceiver;
 import com.example.parktaejun.sixsense.ContactFunction.SMS_BroadCastReceiver;
 import com.example.parktaejun.sixsense.MainFunction.Hangul;
 import com.example.parktaejun.sixsense.MainFunction.Vibrate;
@@ -26,16 +28,22 @@ import com.example.parktaejun.sixsense.PhoneBook.SMSContentData;
 import com.example.parktaejun.sixsense.databinding.ActivitySmscontentBinding;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 
 public class SMSContentActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
 
     private GestureDetectorCompat mDetector;
     private Vibrator vibrator;
-    SMS_BroadCastReceiver receiver;
+    SMS_BroadCastReceiver sms_receiver;
+    EarPlug_BroadCastReceiver earplug_receiver;
+
     Context context;
     ActivitySmscontentBinding binding;
     private static ArrayList<SMSContentData> SCitems = new ArrayList<>();
+
+    private static boolean epMode = false;
+    TextToSpeech tts;
 
     int position = 0;
     String returnValue = "";
@@ -44,24 +52,32 @@ public class SMSContentActivity extends AppCompatActivity implements GestureDete
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_smscontent);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_smscontent);
-        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        int position = 0;
-        this.position = position;
 
-        mDetector = new GestureDetectorCompat(this, this);
 
         initApp(position);
     }
 
     private void initApp(int p) {
 
-        receiver = new SMS_BroadCastReceiver();
-        registerReceiver(receiver, new IntentFilter());
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_smscontent);
+
+        int position = 0;
+        this.position = position;
+
+        earplug_receiver = new EarPlug_BroadCastReceiver();
+        registerReceiver(earplug_receiver, new IntentFilter());
+
+        sms_receiver = new SMS_BroadCastReceiver();
+        registerReceiver(sms_receiver, new IntentFilter());
+
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        mDetector = new GestureDetectorCompat(this, this);
 
         readSMSMessage();
         initDisplay(p);
         initBraille();
+        initTTS();
     }
 
     @Override
@@ -77,7 +93,25 @@ public class SMSContentActivity extends AppCompatActivity implements GestureDete
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(receiver);
+        unregisterReceiver(sms_receiver);
+        unregisterReceiver(earplug_receiver);
+    }
+
+    private void initTTS(){
+        tts=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    tts.setLanguage(Locale.KOREAN);
+                }
+            }
+        });
+    }
+
+    private void speakTTS(String s){
+        //tts.setPitch((float) 0.1); //음량
+        //tts.setSpeechRate((float) 0.5); //재생속도
+        tts.speak(s, TextToSpeech.QUEUE_FLUSH, null);
     }
 
     private void readSMSMessage() {
@@ -107,6 +141,18 @@ public class SMSContentActivity extends AppCompatActivity implements GestureDete
             data.setBody((c.getString(c.getColumnIndex("body"))));
             SCitems.add(data);
         }
+    }
+
+    public static void setEarPlugMode(boolean b){
+        if (b){
+            epMode = true;
+        }else{
+            epMode = false;
+        }
+    }
+
+    public static boolean getEarPlugMode(){
+        return epMode;
     }
 
     private void initDisplay(int p) {
@@ -158,7 +204,11 @@ public class SMSContentActivity extends AppCompatActivity implements GestureDete
     @Override
     public boolean onDown(MotionEvent e) {
         Toast.makeText(getApplicationContext(), "Touch", Toast.LENGTH_SHORT).show();
-        Vibrate.makeVibe(1);
+        if(getEarPlugMode()){
+            speakTTS(SCitems.get(position).getPhoneNum() + " " + SCitems.get(position).getDisplayName() + " " + SCitems.get(position).getBody());
+        } else{
+            Vibrate.makeVibe(1);
+        }
         return true;
     }
 
@@ -188,7 +238,7 @@ public class SMSContentActivity extends AppCompatActivity implements GestureDete
         if (Math.abs(e1.getX() - e2.getX()) < 250 && (e1.getY() - e2.getY() > 0)) {
             //위로 드래그
             Toast.makeText(getApplication(), "UP", Toast.LENGTH_SHORT).show();
-            Vibrate.makeVibe(2);
+            if(!getEarPlugMode())Vibrate.makeVibe(2);
         } else if (Math.abs(e1.getX() - e2.getX()) < 250 && (e2.getY() - e1.getY() > 0)) {
             //아래로 드래그
             Toast.makeText(getApplicationContext(), "DOWN", Toast.LENGTH_SHORT).show();
