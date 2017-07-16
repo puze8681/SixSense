@@ -172,28 +172,6 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
         initTTS();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 200) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                initApp(position);
-            }
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(sms_receiver);
-        unregisterReceiver(earplug_receiver);
-
-        if(tts !=null){
-            tts.stop();
-            tts.shutdown();
-        }
-    }
-
     private void initTTS(){
         tts=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -258,6 +236,28 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
                 String alphabet = Hangul.HangulAlphabet(Hangul.split((PBitems.get(position).getPhoneNum() + " " + PBitems.get(position).getDisplayName()).charAt(i)));
                 returnValue += alphabet;
             }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 200) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                initApp(position);
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(sms_receiver);
+        unregisterReceiver(earplug_receiver);
+
+        if(tts !=null){
+            tts.stop();
+            tts.shutdown();
         }
     }
 

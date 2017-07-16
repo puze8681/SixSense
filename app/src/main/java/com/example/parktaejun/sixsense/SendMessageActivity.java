@@ -9,6 +9,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Vibrator;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.support.v4.view.GestureDetectorCompat;
 import android.os.Bundle;
 import android.telephony.SmsManager;
@@ -25,17 +28,19 @@ import com.example.parktaejun.sixsense.ContactFunction.SMSreceiver;
 import com.example.parktaejun.sixsense.MainFunction.Braille;
 import com.example.parktaejun.sixsense.databinding.ActivityMainBinding;
 
+import java.util.ArrayList;
+
 public class SendMessageActivity extends Activity implements GestureDetector.OnGestureListener { //
 
     ActivityMainBinding mainBinding;
 
     private GestureDetectorCompat mDetector;
     private static TextView smsText;
-    private Button smsSend;
-    private TextView txtResult;
     private TextView countBraille;
     public boolean dragUpDown;
     public boolean dragRightLeft;
+    Intent sttIntent;
+    SpeechRecognizer stt;
     private static TextView ind_one;
     private static TextView ind_two;
     private static TextView ind_three;
@@ -53,12 +58,14 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initApp();
+    }
+
+    private void initApp(){
         mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         Toast.makeText(getApplicationContext(), "Run", Toast.LENGTH_SHORT).show();
 
         smsText = mainBinding.txtSend;
-
-        txtResult = mainBinding.txtResult;
         countBraille = mainBinding.countBraille;
         ind_one = mainBinding.indexOne;
         ind_two = mainBinding.indexTwo;
@@ -86,19 +93,20 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
             }
         };
         smsText.addTextChangedListener(textWatcher);
-        smsSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendSMS();
-            }
-        });
 
         countBraille.setText(Integer.toString((Braille.countCheck())));
         mDetector = new GestureDetectorCompat(this, this);
-        // Set the gesture detector as the double tap
-        // listener.
     }
 
+    private void initSTT(){
+        sttIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        sttIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getPackageName());
+        sttIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR");
+
+        stt = SpeechRecognizer.createSpeechRecognizer(this);
+        stt.setRecognitionListener(listener);
+        stt.startListening(sttIntent);
+    }
 
     //텍스트뷰에 텍스트를 추가함
     public static void addFirstText(char t) {
@@ -192,6 +200,26 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
         mSmsManager.sendTextMessage(smsNumber, null, smsText, sentIntent, deliveredIntent);
     }
 
+    private RecognitionListener listener = new RecognitionListener() {
+        @Override public void onReadyForSpeech(Bundle params) {}
+        @Override public void onBeginningOfSpeech() {}
+        @Override public void onRmsChanged(float rmsdB) {}
+        @Override public void onBufferReceived(byte[] buffer) {}
+        @Override public void onEndOfSpeech() {}
+        @Override public void onError(int error) {}
+        @Override public void onPartialResults(Bundle partialResults) {}
+        @Override public void onEvent(int eventType, Bundle params) {}
+        @Override public void onResults(Bundle results) {
+            String key= "";
+            key = SpeechRecognizer.RESULTS_RECOGNITION;
+            ArrayList<String> mResult = results.getStringArrayList(key);
+            String[] rs = new String[mResult.size()];
+            mResult.toArray(rs);
+            smsText.setText(smsText.getText().toString() + rs[0]);
+            stt.startListening(sttIntent);
+        }
+    };
+
     @Override public boolean onTouchEvent(MotionEvent event) {this.mDetector.onTouchEvent(event);return super.onTouchEvent(event);}
     @Override public void onShowPress(MotionEvent e) {}
     @Override public boolean onSingleTapUp(MotionEvent e) {return false;}
@@ -262,7 +290,10 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
             dragRightLeft = true;
         } else if ((e2.getX() - e1.getX() > 0) && (e2.getY() - e1.getY() > 0)) {
             //오른쪽 아래 대각선 드래그
+            Toast.makeText(this, "speech to text : ON", Toast.LENGTH_SHORT).show();
         } else if ((e1.getX() - e2.getX() > 0) && (e1.getY() - e2.getY() > 0)) {
+            initBraille();
+            initSTT();
             //왼쪽 위 대각선 드래그
         } else {
             Toast.makeText(getApplication(), "nothing on gesture", Toast.LENGTH_SHORT).show();
