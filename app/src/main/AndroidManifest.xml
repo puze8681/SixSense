@@ -3,6 +3,7 @@
     package="com.example.parktaejun.sixsense">
 
     <uses-permission android:name="android.permission.VIBRATE" />
+
     <uses-permission-sdk-23 android:name="android.permission.SEND_SMS" />
 
     <uses-permission android:name="android.permission.READ_SMS" />
@@ -17,17 +18,20 @@
         android:theme="@style/AppTheme">
         <receiver android:name=".Broadcastreceiver">
             <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-        <activity android:name=".MainActivity">
+
+        <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SMSreceiver"></activity>
+        <activity android:name=".SMSreceiver" />
+        <activity android:name=".PhoneBookActivity" />
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>

@@ -1,6 +1,5 @@
 package com.example.parktaejun.sixsense;
 
-import android.app.Application;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Vibrator;
@@ -11,6 +10,8 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+import com.example.parktaejun.sixsense.MainFunction.Hangul;
+import com.example.parktaejun.sixsense.MainFunction.Vibrate;
 import com.example.parktaejun.sixsense.databinding.ActivitySmsreceiverBinding;
 
 public class SMSreceiver extends AppCompatActivity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {

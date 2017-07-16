@@ -1,8 +1,9 @@
-package com.example.parktaejun.sixsense;
+package com.example.parktaejun.sixsense.MainFunction;
 
-import android.content.Intent;
 import android.os.Handler;
-import android.widget.Toast;
+
+import com.example.parktaejun.sixsense.MainActivity;
+import com.example.parktaejun.sixsense.SMSreceiver;
 
 import java.util.ArrayList;
 
@@ -548,16 +549,22 @@ public class Vibrate {
         }
     }
 
-    //짧은 진동 (1초)
+    //짧은 진동 (0.5초)
     private static void shortVibe() {
         MainActivity.vibrator.vibrate(500);
         breakVibe();
     }
 
-    //긴 진동 (3초)
+    //긴 진동 (1.5초)
     private static void longVibe() {
         MainActivity.vibrator.vibrate(1500);
         breakVibe();
+    }
+
+    public static void splashVibe(){
+        MainActivity.vibrator.vibrate(500);
+        breakVibe();
+        MainActivity.vibrator.vibrate(500);
     }
 
     private static void breakVibe(){
@@ -566,6 +573,6 @@ public class Vibrate {
             @Override
             public void run() {
             }
-        }, 3000);
+        }, 500);
     }
 }
