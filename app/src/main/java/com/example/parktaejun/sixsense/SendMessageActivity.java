@@ -98,6 +98,16 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
         mDetector = new GestureDetectorCompat(this, this);
     }
 
+    //점자를 초기화함
+    public static void initBraille() {
+        ind_one.setText("");
+        ind_two.setText("");
+        ind_three.setText("");
+        ind_four.setText("");
+        ind_five.setText("");
+        ind_six.setText("");
+    }
+
     private void initSTT(){
         sttIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         sttIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getPackageName());
@@ -123,16 +133,6 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
 
     public static void addNumber(int n) {
         smsText.setText(smsText.getText().toString() + Integer.toString(n));
-    }
-
-    //점자를 초기화함
-    public static void initBraille() {
-        ind_one.setText("");
-        ind_two.setText("");
-        ind_three.setText("");
-        ind_four.setText("");
-        ind_five.setText("");
-        ind_six.setText("");
     }
 
     public void sendSMS() {
@@ -291,9 +291,9 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
         } else if ((e2.getX() - e1.getX() > 0) && (e2.getY() - e1.getY() > 0)) {
             //오른쪽 아래 대각선 드래그
             Toast.makeText(this, "speech to text : ON", Toast.LENGTH_SHORT).show();
-        } else if ((e1.getX() - e2.getX() > 0) && (e1.getY() - e2.getY() > 0)) {
             initBraille();
             initSTT();
+        } else if ((e1.getX() - e2.getX() > 0) && (e1.getY() - e2.getY() > 0)) {
             //왼쪽 위 대각선 드래그
         } else {
             Toast.makeText(getApplication(), "nothing on gesture", Toast.LENGTH_SHORT).show();

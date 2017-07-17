@@ -29,7 +29,7 @@ public class SMSreceiver extends AppCompatActivity implements GestureDetector.On
         setContentView(R.layout.activity_smsreceiver);
 
         smsreceiverBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        smsreceiverBinding.txtContent.setText(SMS_BroadCastReceiver.smsText);
+        smsreceiverBinding.txtContent.setText(BroadCastReceiver.smsText);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         mDetector = new GestureDetectorCompat(this, this);
         // Set the gesture detector as the double tap

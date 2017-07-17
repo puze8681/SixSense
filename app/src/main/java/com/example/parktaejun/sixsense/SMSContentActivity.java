@@ -1,6 +1,5 @@
 package com.example.parktaejun.sixsense;
 
-import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,8 +20,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
-import com.example.parktaejun.sixsense.ContactFunction.EarPlug_BroadCastReceiver;
-import com.example.parktaejun.sixsense.ContactFunction.SMS_BroadCastReceiver;
+import com.example.parktaejun.sixsense.ContactFunction.BroadCastReceiver;
 import com.example.parktaejun.sixsense.MainFunction.Hangul;
 import com.example.parktaejun.sixsense.MainFunction.Vibrate;
 import com.example.parktaejun.sixsense.PhoneBook.SMSContentData;
@@ -36,8 +34,7 @@ public class SMSContentActivity extends AppCompatActivity implements GestureDete
 
     private GestureDetectorCompat mDetector;
     private Vibrator vibrator;
-    SMS_BroadCastReceiver sms_receiver;
-    EarPlug_BroadCastReceiver earplug_receiver;
+    BroadCastReceiver sms_receiver;
 
     Context context;
     ActivitySmscontentBinding binding;
@@ -65,10 +62,7 @@ public class SMSContentActivity extends AppCompatActivity implements GestureDete
         int position = 0;
         this.position = position;
 
-        earplug_receiver = new EarPlug_BroadCastReceiver();
-        registerReceiver(earplug_receiver, new IntentFilter());
-
-        sms_receiver = new SMS_BroadCastReceiver();
+        sms_receiver = new BroadCastReceiver();
         registerReceiver(sms_receiver, new IntentFilter());
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -193,7 +187,6 @@ public class SMSContentActivity extends AppCompatActivity implements GestureDete
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(sms_receiver);
-        unregisterReceiver(earplug_receiver);
     }
 
     @Override public boolean onTouchEvent(MotionEvent event) {this.mDetector.onTouchEvent(event);return super.onTouchEvent(event);}

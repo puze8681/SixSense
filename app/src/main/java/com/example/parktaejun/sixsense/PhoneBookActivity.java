@@ -22,8 +22,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
-import com.example.parktaejun.sixsense.ContactFunction.EarPlug_BroadCastReceiver;
-import com.example.parktaejun.sixsense.ContactFunction.SMS_BroadCastReceiver;
+import com.example.parktaejun.sixsense.ContactFunction.BroadCastReceiver;
 import com.example.parktaejun.sixsense.MainFunction.Hangul;
 import com.example.parktaejun.sixsense.MainFunction.Vibrate;
 import com.example.parktaejun.sixsense.PhoneBook.PhoneBookData;
@@ -40,8 +39,7 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
 
     private GestureDetectorCompat mDetector;
     private Vibrator vibrator;
-    SMS_BroadCastReceiver sms_receiver;
-    EarPlug_BroadCastReceiver earplug_receiver;
+    BroadCastReceiver sms_receiver;
     Context context;
     ActivityPhoneBookBinding binding;
     private static ArrayList<PhoneBookData> PBitems = new ArrayList<>();
@@ -82,11 +80,11 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
         int position = 0;
         this.position = position;
 
-        earplug_receiver = new EarPlug_BroadCastReceiver();
-        registerReceiver(earplug_receiver, new IntentFilter());
 
-        sms_receiver = new SMS_BroadCastReceiver();
-        registerReceiver(sms_receiver, new IntentFilter());
+        sms_receiver = new BroadCastReceiver();
+        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
+        intentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
+        registerReceiver(sms_receiver, intentFilter);
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -253,7 +251,6 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(sms_receiver);
-        unregisterReceiver(earplug_receiver);
 
         if(tts !=null){
             tts.stop();
