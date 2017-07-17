@@ -34,7 +34,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ContactFunction.SMSreceiver" />
         <activity android:name=".PhoneBookActivity" />
         <activity android:name=".SendMessageActivity" />
         <activity android:name=".PushActivity" />

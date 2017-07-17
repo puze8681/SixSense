@@ -19,12 +19,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.parktaejun.sixsense.ContactFunction.SMSreceiver;
+import com.example.parktaejun.sixsense.ContactFunction.BroadCastReceiver;
 import com.example.parktaejun.sixsense.MainFunction.Braille;
 import com.example.parktaejun.sixsense.databinding.ActivityMainBinding;
 
@@ -33,6 +31,7 @@ import java.util.ArrayList;
 public class SendMessageActivity extends Activity implements GestureDetector.OnGestureListener { //
 
     ActivityMainBinding mainBinding;
+    BroadcastReceiver receiver;
 
     private GestureDetectorCompat mDetector;
     private static TextView smsText;
@@ -154,9 +153,9 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
         countBraille.setText("0");
     }
 
-    private void sendSMS() {
+    private void sendSMS(String s) {
         String smsNum = "01097908310";
-        String smsText = SMS_Content;
+        String smsText = s;
 
         if (smsNum.length() > 0 && smsText.length() > 0) {
             sendSMS(smsNum, smsText);
@@ -166,57 +165,13 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
     }
 
     public void sendSMS(String smsNumber, String smsText) {
-        PendingIntent sentIntent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_SENT_ACTION"), 0);
-        PendingIntent deliveredIntent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_DELIVERED_ACTION"), 0);
-
-        registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                switch (getResultCode()) {
-                    case Activity.RESULT_OK:
-                        // 전송 성공
-                        Toast.makeText(mContext, "전송 완료", Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                        // 전송 실패
-                        Toast.makeText(mContext, "전송 실패", Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_NO_SERVICE:
-                        // 서비스 지역 아님
-                        Toast.makeText(mContext, "서비스 지역이 아닙니다", Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_RADIO_OFF:
-                        // 무선 꺼짐
-                        Toast.makeText(mContext, "무선(Radio)가 꺼져있습니다", Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_NULL_PDU:
-                        // PDU 실패
-                        Toast.makeText(mContext, "PDU Null", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        }, new IntentFilter("SMS_SENT_ACTION"));
-
-        registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                switch (getResultCode()) {
-                    case Activity.RESULT_OK:
-                        // 도착 완료
-                        Toast.makeText(mContext, "SMS 도착 완료", Toast.LENGTH_SHORT).show();
-                        Intent smsIntent = new Intent(SendMessageActivity.this, SMSreceiver.class);
-                        startActivity(smsIntent);
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        // 도착 안됨
-                        Toast.makeText(mContext, "SMS 도착 실패", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        }, new IntentFilter("SMS_DELIVERED_ACTION"));
+        receiver = new BroadCastReceiver();
+        IntentFilter intentFilter = new IntentFilter("SMS_SENT_ACTION");
+        intentFilter.addAction("SMS_DELIVERED_ACTION");
+        registerReceiver(receiver, intentFilter);
 
         SmsManager mSmsManager = SmsManager.getDefault();
-        mSmsManager.sendTextMessage(smsNumber, null, smsText, sentIntent, deliveredIntent);
+        mSmsManager.sendTextMessage(smsNumber, null, smsText, null, null);
     }
 
     private RecognitionListener listener = new RecognitionListener() {
@@ -302,7 +257,7 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
         } else if (Math.abs(e1.getY() - e2.getY()) < 250 && (e2.getX() - e1.getX() > 0)) {
             //오른쪽 드래그
             Toast.makeText(getApplicationContext(), " right : send SMS ", Toast.LENGTH_SHORT).show();
-            sendSMS();
+            sendSMS(smsText.getText().toString());
         } else if ((e2.getX() - e1.getX() > 0) && (e2.getY() - e1.getY() > 0)) {
             //오른쪽 아래 대각선 드래그
             Toast.makeText(this, "right/down : stt-on ", Toast.LENGTH_SHORT).show();
