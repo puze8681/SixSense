@@ -1,10 +1,9 @@
-package com.example.parktaejun.sixsense.ContactFunction;
+package com.example.parktaejun.sixsense.BroadCastReceiver;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
@@ -15,10 +14,8 @@ import com.example.parktaejun.sixsense.PhoneBook.PhoneBookData;
 import com.example.parktaejun.sixsense.PhoneBookActivity;
 import com.example.parktaejun.sixsense.PushActivity;
 import com.example.parktaejun.sixsense.SMSContentActivity;
-import com.example.parktaejun.sixsense.SendMessageActivity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 public class BroadCastReceiver extends BroadcastReceiver {
@@ -132,6 +129,8 @@ public class BroadCastReceiver extends BroadcastReceiver {
                     Toast.makeText(context, "SMS 도착 실패", Toast.LENGTH_SHORT).show();
                     break;
             }
+        }else{
+
         }
     }
 }

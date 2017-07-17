@@ -13,7 +13,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
-import com.example.parktaejun.sixsense.ContactFunction.BroadCastReceiver;
 import com.example.parktaejun.sixsense.MainFunction.Hangul;
 import com.example.parktaejun.sixsense.MainFunction.Vibrate;
 import com.example.parktaejun.sixsense.databinding.ActivityPushBinding;
@@ -25,7 +24,6 @@ public class PushActivity extends AppCompatActivity implements GestureDetector.O
     private GestureDetectorCompat mDetector;
     private Vibrator vibrator;
     private static boolean epMode = false;
-    BroadCastReceiver receiver;
     TextToSpeech tts;
     String returnValue = "";
     ActivityPushBinding binding;
@@ -48,11 +46,6 @@ public class PushActivity extends AppCompatActivity implements GestureDetector.O
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         mDetector = new GestureDetectorCompat(this, this);
-
-        receiver = new BroadCastReceiver();
-        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
-        intentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
-        registerReceiver(receiver, intentFilter);
 
         initDisplay();
         initBraille();
@@ -110,7 +103,6 @@ public class PushActivity extends AppCompatActivity implements GestureDetector.O
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(receiver);
 
         if(tts !=null){
             tts.stop();

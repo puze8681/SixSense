@@ -20,7 +20,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
-import com.example.parktaejun.sixsense.ContactFunction.BroadCastReceiver;
 import com.example.parktaejun.sixsense.MainFunction.Hangul;
 import com.example.parktaejun.sixsense.MainFunction.Vibrate;
 import com.example.parktaejun.sixsense.PhoneBook.SMSContentData;
@@ -34,7 +33,6 @@ public class SMSContentActivity extends AppCompatActivity implements GestureDete
 
     private GestureDetectorCompat mDetector;
     private Vibrator vibrator;
-    BroadCastReceiver receiver;
 
     Context context;
     ActivitySmscontentBinding binding;
@@ -61,9 +59,6 @@ public class SMSContentActivity extends AppCompatActivity implements GestureDete
 
         int position = 0;
         this.position = position;
-
-        receiver = new BroadCastReceiver();
-        registerReceiver(receiver, new IntentFilter());
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -182,7 +177,6 @@ public class SMSContentActivity extends AppCompatActivity implements GestureDete
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(receiver);
     }
 
     @Override public boolean onTouchEvent(MotionEvent event) {this.mDetector.onTouchEvent(event);return super.onTouchEvent(event);}

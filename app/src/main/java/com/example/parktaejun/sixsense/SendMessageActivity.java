@@ -2,7 +2,6 @@ package com.example.parktaejun.sixsense;
 
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -22,7 +21,6 @@ import android.view.MotionEvent;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.parktaejun.sixsense.ContactFunction.BroadCastReceiver;
 import com.example.parktaejun.sixsense.MainFunction.Braille;
 import com.example.parktaejun.sixsense.databinding.ActivityMainBinding;
 
@@ -31,7 +29,6 @@ import java.util.ArrayList;
 public class SendMessageActivity extends Activity implements GestureDetector.OnGestureListener { //
 
     ActivityMainBinding mainBinding;
-    BroadcastReceiver receiver;
 
     private GestureDetectorCompat mDetector;
     private static TextView smsText;
@@ -165,11 +162,6 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
     }
 
     public void sendSMS(String smsNumber, String smsText) {
-        receiver = new BroadCastReceiver();
-        IntentFilter intentFilter = new IntentFilter("SMS_SENT_ACTION");
-        intentFilter.addAction("SMS_DELIVERED_ACTION");
-        registerReceiver(receiver, intentFilter);
-
         SmsManager mSmsManager = SmsManager.getDefault();
         mSmsManager.sendTextMessage(smsNumber, null, smsText, null, null);
     }

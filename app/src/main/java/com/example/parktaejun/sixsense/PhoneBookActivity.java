@@ -22,7 +22,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
-import com.example.parktaejun.sixsense.ContactFunction.BroadCastReceiver;
+import com.example.parktaejun.sixsense.BroadCastReceiver.BroadCastReceiver;
 import com.example.parktaejun.sixsense.MainFunction.Hangul;
 import com.example.parktaejun.sixsense.MainFunction.Vibrate;
 import com.example.parktaejun.sixsense.PhoneBook.PhoneBookData;
@@ -79,12 +79,6 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
 
         int position = 0;
         this.position = position;
-
-
-        receiver = new BroadCastReceiver();
-        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
-        intentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
-        registerReceiver(receiver, intentFilter);
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -165,9 +159,19 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
             }
         }
 
+        initReceiver();
         initDisplay(p);
         initBraille();
         initTTS();
+    }
+
+    private void initReceiver(){
+        receiver = new BroadCastReceiver();
+        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
+        intentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
+        intentFilter.addAction("SMS_DELIVERED_ACTION");
+        intentFilter.addAction("SMS_SENT_ACTION");
+        registerReceiver(receiver, intentFilter);
     }
 
     private void initTTS(){
@@ -240,6 +244,17 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 initApp(position);
             }
+        }
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        unregisterReceiver(receiver);
+
+        if(tts !=null){
+            tts.stop();
+            tts.shutdown();
         }
     }
 
