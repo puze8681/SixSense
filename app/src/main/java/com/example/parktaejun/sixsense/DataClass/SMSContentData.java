@@ -1,13 +1,13 @@
-package com.example.parktaejun.sixsense.PhoneBook;
+package com.example.parktaejun.sixsense.DataClass;
 
 /**
  * Created by parktaejun on 2017. 7. 17..
  */
 
-public class PhoneBookData {
-    private String phoneNum, displayName;
+public class SMSContentData {
+    private String phoneNum, displayName, body;
 
-    public PhoneBookData() {
+    public SMSContentData() {
 
     }
 
@@ -25,5 +25,13 @@ public class PhoneBookData {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    public String getBody(){
+        return body;
+    }
+
+    public void setBody(String body){
+        this.body = body;
     }
 }

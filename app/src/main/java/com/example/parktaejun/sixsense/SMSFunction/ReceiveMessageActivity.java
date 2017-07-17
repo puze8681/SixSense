@@ -1,4 +1,4 @@
-package com.example.parktaejun.sixsense;
+package com.example.parktaejun.sixsense.SMSFunction;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,11 +15,12 @@ import android.widget.Toast;
 
 import com.example.parktaejun.sixsense.MainFunction.Hangul;
 import com.example.parktaejun.sixsense.MainFunction.Vibrate;
+import com.example.parktaejun.sixsense.R;
 import com.example.parktaejun.sixsense.databinding.ActivityPushBinding;
 
 import java.util.Locale;
 
-public class PushActivity extends AppCompatActivity implements GestureDetector.OnGestureListener{
+public class ReceiveMessageActivity extends AppCompatActivity implements GestureDetector.OnGestureListener{
 
     private GestureDetectorCompat mDetector;
     private Vibrator vibrator;

@@ -35,10 +35,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PhoneBookActivity" />
-        <activity android:name=".SendMessageActivity" />
-        <activity android:name=".PushActivity" />
-        <activity android:name=".SMSContentActivity"></activity>
+        <activity android:name=".SMSListActivity.PhoneBookActivity" />
+        <activity android:name=".SMSFunction.SendMessageActivity" />
+        <activity android:name=".SMSFunction.ReceiveMessageActivity" />
+        <activity android:name=".SMSListActivity.SMSContentActivity"></activity>
     </application>
 
 </manifest>

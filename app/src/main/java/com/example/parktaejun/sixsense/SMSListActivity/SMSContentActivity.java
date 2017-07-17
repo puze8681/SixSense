@@ -1,4 +1,4 @@
-package com.example.parktaejun.sixsense;
+package com.example.parktaejun.sixsense.SMSListActivity;
 
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
@@ -22,7 +21,9 @@ import android.widget.Toast;
 
 import com.example.parktaejun.sixsense.MainFunction.Hangul;
 import com.example.parktaejun.sixsense.MainFunction.Vibrate;
-import com.example.parktaejun.sixsense.PhoneBook.SMSContentData;
+import com.example.parktaejun.sixsense.R;
+import com.example.parktaejun.sixsense.DataClass.SMSContentData;
+import com.example.parktaejun.sixsense.SMSFunction.SendMessageActivity;
 import com.example.parktaejun.sixsense.databinding.ActivitySmscontentBinding;
 
 import java.util.ArrayList;

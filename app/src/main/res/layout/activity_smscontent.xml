@@ -11,7 +11,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:orientation="vertical"
-        tools:context="com.example.parktaejun.sixsense.SMSContentActivity">
+        tools:context="com.example.parktaejun.sixsense.SMSListActivity.SMSContentActivity">
         <android.support.v4.widget.Space
             android:layout_weight="1"
             android:layout_width="match_parent"

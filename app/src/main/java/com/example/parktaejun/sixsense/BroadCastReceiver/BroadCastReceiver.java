@@ -10,10 +10,10 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.parktaejun.sixsense.PhoneBook.PhoneBookData;
-import com.example.parktaejun.sixsense.PhoneBookActivity;
-import com.example.parktaejun.sixsense.PushActivity;
-import com.example.parktaejun.sixsense.SMSContentActivity;
+import com.example.parktaejun.sixsense.DataClass.PhoneBookData;
+import com.example.parktaejun.sixsense.SMSListActivity.PhoneBookActivity;
+import com.example.parktaejun.sixsense.SMSFunction.ReceiveMessageActivity;
+import com.example.parktaejun.sixsense.SMSListActivity.SMSContentActivity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -68,7 +68,7 @@ public class BroadCastReceiver extends BroadcastReceiver {
 
             Toast.makeText(context, "시간 : " + time + ", 발신자 : " + number + ", 내용 : " + message , Toast.LENGTH_LONG).show();
 
-            Intent pushIntent = new Intent(context, PushActivity.class);
+            Intent pushIntent = new Intent(context, ReceiveMessageActivity.class);
             pushIntent.putExtra("time", time);
             pushIntent.putExtra("number", number);
             pushIntent.putExtra("person", person);
@@ -81,13 +81,13 @@ public class BroadCastReceiver extends BroadcastReceiver {
                 case 0:
                     PhoneBookActivity.setEarPlugMode(false);
                     SMSContentActivity.setEarPlugMode(false);
-                    PushActivity.setEarPlugMode(false);
+                    ReceiveMessageActivity.setEarPlugMode(false);
                     Log.d("111", "Headset is unplugged");
                     break;
                 case 1:
                     PhoneBookActivity.setEarPlugMode(true);
                     SMSContentActivity.setEarPlugMode(true);
-                    PushActivity.setEarPlugMode(false);
+                    ReceiveMessageActivity.setEarPlugMode(false);
                     Log.d("111", "Headset is plugged");
                     break;
                 default:

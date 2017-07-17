@@ -2,7 +2,7 @@ package com.example.parktaejun.sixsense.MainFunction;
 
 import android.os.Handler;
 
-import com.example.parktaejun.sixsense.SendMessageActivity;
+import com.example.parktaejun.sixsense.SMSFunction.SendMessageActivity;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.example.parktaejun.sixsense;
+package com.example.parktaejun.sixsense.SMSListActivity;
 
 import android.Manifest;
 import android.content.Context;
@@ -25,7 +25,9 @@ import android.widget.Toast;
 import com.example.parktaejun.sixsense.BroadCastReceiver.BroadCastReceiver;
 import com.example.parktaejun.sixsense.MainFunction.Hangul;
 import com.example.parktaejun.sixsense.MainFunction.Vibrate;
-import com.example.parktaejun.sixsense.PhoneBook.PhoneBookData;
+import com.example.parktaejun.sixsense.DataClass.PhoneBookData;
+import com.example.parktaejun.sixsense.R;
+import com.example.parktaejun.sixsense.SMSFunction.SendMessageActivity;
 import com.example.parktaejun.sixsense.databinding.ActivityPhoneBookBinding;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;

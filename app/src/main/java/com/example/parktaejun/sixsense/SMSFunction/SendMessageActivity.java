@@ -1,4 +1,4 @@
-package com.example.parktaejun.sixsense;
+package com.example.parktaejun.sixsense.SMSFunction;
 
 
 import android.app.Activity;
@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.parktaejun.sixsense.MainFunction.Braille;
+import com.example.parktaejun.sixsense.R;
 import com.example.parktaejun.sixsense.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
