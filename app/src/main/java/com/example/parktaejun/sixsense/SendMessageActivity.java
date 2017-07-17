@@ -140,6 +140,13 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
         countBraille.setText("0");
     }
 
+    private void initText(){
+        smsText.setText("");
+        initBraille();
+        Braille.init();
+        countBraille.setText("0");
+    }
+
     private void init(){
         smsText.setText(smsText.getText().toString());
         initBraille();
@@ -290,19 +297,21 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
             Braille.recGesture(false);
         } else if (Math.abs(e1.getY() - e2.getY()) < 250 && (e1.getX() - e2.getX() > 0)) {
             //왼쪽 드래그
-            Toast.makeText(getApplication(), "왼쪽 드래그 : 지웁니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplication(), " left : erase ", Toast.LENGTH_SHORT).show();
             eraseText();
         } else if (Math.abs(e1.getY() - e2.getY()) < 250 && (e2.getX() - e1.getX() > 0)) {
             //오른쪽 드래그
-            Toast.makeText(getApplicationContext(), "RIGHT", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), " right : send SMS ", Toast.LENGTH_SHORT).show();
             sendSMS();
         } else if ((e2.getX() - e1.getX() > 0) && (e2.getY() - e1.getY() > 0)) {
             //오른쪽 아래 대각선 드래그
-            Toast.makeText(this, "speech to text : ON", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "right/down : stt-on ", Toast.LENGTH_SHORT).show();
             init();
             initSTT();
         } else if ((e1.getX() - e2.getX() > 0) && (e1.getY() - e2.getY() > 0)) {
             //왼쪽 위 대각선 드래그
+            Toast.makeText(this, "left/up : erase-all ", Toast.LENGTH_SHORT).show();
+            initText();
         } else {
             Toast.makeText(getApplication(), "nothing on gesture", Toast.LENGTH_SHORT).show();
         }
