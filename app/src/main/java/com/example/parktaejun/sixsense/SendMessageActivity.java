@@ -53,13 +53,13 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_send_message);
 
         initApp();
     }
 
     private void initApp(){
-        mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_send_message);
         Toast.makeText(getApplicationContext(), "Run", Toast.LENGTH_SHORT).show();
 
         smsText = mainBinding.txtSend;
