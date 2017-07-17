@@ -33,8 +33,8 @@ public class Braille {
 
     private static boolean gesture[] = new boolean[6]; // 점자 6칸에 위로 드래그, 아래로 드래그를 나타냄
     private static String braille = ""; // 점자 6칸을 각 형태소로 나타냄
-    private static char text; // 각 형태소를 합쳐 한 글자로 나타냄
-    private static int at; // 점자의 위치가 초성인지 중성인지 종성인지 나타냄
+    private static char text = ' '; // 각 형태소를 합쳐 한 글자로 나타냄
+    private static int at = 0; // 점자의 위치가 초성인지 중성인지 종성인지 나타냄
 
     // 점자의 몇번째 칸인지 확인해줌
     public static int countCheck() {
@@ -56,15 +56,6 @@ public class Braille {
     // 배열 6칸이 다 찼는지 확인하여 1. 점자를 형태소로 바꿈, 2. 제스처 변수를 초기화, 3. 메인액티비티에 텍스트 추가
     private static void isSix() {
         gestureToBraille(Braille.gesture); // 점자를 형태소로 바꿈
-    }
-
-    // 제스처를 초기화함
-    private static void initGesture() {
-        count = 0; // 점자 칸의 차례를 초기화
-        for (int i = 0; i < gesture.length; i++) {
-            gesture[i] = false; // 제스처 변수를 모두 거짓으로 초기화
-        }
-        SendMessageActivity.initBraille(); // 점자가 나타나는 텍스트를 모두 빈 텍스트로 초기화
     }
 
     // 제스처를 점자(형태소)로 나타냄
@@ -90,27 +81,27 @@ public class Braille {
                     switch (b) {
                         case "000100":
                             text = 'ㄲ';
-                            if (Scount == 1) initWord();
+                            if (Scount == 1) initFirstWord();
                             break;
                         case "010100":
                             if(Scount == 3)initNumber(9);
                             else{
                                 text = 'ㄸ';
-                                if (Scount == 1) initWord();
+                                if (Scount == 1) initFirstWord();
                             }
 
                             break;
                         case "000110":
                             text = 'ㅃ';
-                            if (Scount == 1) initWord();
+                            if (Scount == 1) initFirstWord();
                             break;
                         case "000001":
                             text = 'ㅆ';
-                            if (Scount == 1) initWord();
+                            if (Scount == 1) initFirstWord();
                             break;
                         case "000101":
                             text = 'ㅉ';
-                            if (Scount == 1) initWord();
+                            if (Scount == 1) initFirstWord();
                             break;
                         default:
                             break;
@@ -120,13 +111,13 @@ public class Braille {
                     switch (b) {
                         case "000100":
                             text = 'ㄱ';
-                            if (Scount == 1) initWord();
+                            if (Scount == 1) initFirstWord();
                             break;
                         case "100100":
                             if(Scount == 3)initNumber(3);
                             else{
                                 text = 'ㄴ';
-                                if (Scount == 1) initWord();
+                                if (Scount == 1) initFirstWord();
                             }
 
                             break;
@@ -134,61 +125,61 @@ public class Braille {
                             if(Scount == 3)initNumber(9);
                             else{
                                 text = 'ㄷ';
-                                if (Scount == 1) initWord();
+                                if (Scount == 1) initFirstWord();
                             }
 
                             break;
                         case "000010":
                             text = 'ㄹ';
-                            if (Scount == 1) initWord();
+                            if (Scount == 1) initFirstWord();
                             break;
                         case "100010":
                             if(Scount==3)initNumber(5);
                             else{
                                 text = 'ㅁ';
-                                if (Scount == 1) initWord();
+                                if (Scount == 1) initFirstWord();
                             }
 
                             break;
                         case "000110":
                             text = 'ㅂ';
-                            if (Scount == 1) initWord();
+                            if (Scount == 1) initFirstWord();
                             break;
                         case "110110":
                             if(Scount == 3)initNumber(7);
                             else{
                                 text = 'ㅇ';
-                                if (Scount == 1) initWord();
+                                if (Scount == 1) initFirstWord();
                             }
 
                             break;
                         case "000101":
                             text = 'ㅈ';
-                            if (Scount == 1) initWord();
+                            if (Scount == 1) initFirstWord();
                             break;
                         case "000011":
                             text = 'ㅊ';
-                            if (Scount == 1) initWord();
+                            if (Scount == 1) initFirstWord();
                             break;
                         case "110100":
                             if(Scount==3)initNumber(6);
                             else{
                                 text = 'ㅋ';
-                                if (Scount == 1) initWord();
+                                if (Scount == 1) initFirstWord();
                             }
                             break;
                         case "110010":
                             if(Scount == 3)initNumber(8);
                             else{
                                 text = 'ㅌ';
-                                if (Scount == 1) initWord();
+                                if (Scount == 1) initFirstWord();
                             }
                             break;
                         case "100110":
                             if(Scount==3)initNumber(4);
                             else{
                                 text = 'ㅍ';
-                                if (Scount == 1) initWord();
+                                if (Scount == 1) initFirstWord();
                             }
 
                             break;
@@ -196,7 +187,7 @@ public class Braille {
                             if(Scount == 3)initNumber(0);
                             else{
                                 text = 'ㅎ';
-                                if (Scount == 1) initWord();
+                                if (Scount == 1) initFirstWord();
                             }
 
                             break;
@@ -295,7 +286,7 @@ public class Braille {
                     case "101010":
                         text = 'ㅣ';
                         if (Scount == 1) {
-                            initWord();
+                            initFirstWord();
                             break;
                         } else {
                             if (word[0] == ' ') word[0] = 'ㅇ';
@@ -587,7 +578,7 @@ public class Braille {
     }
 
     // 초성 글자를 조합하여 메인액티비티에 추가하고, word 배열을 초기화함
-    private static void initWord() {
+    private static void initFirstWord() {
         SendMessageActivity.addFirstText(Hangul.CombineHangul(word)); // 글자를 조합하여 메인액티비티에 추가함
     }
 
@@ -612,5 +603,29 @@ public class Braille {
     private static void initSpecial(){
         SFcount=0;SLcount=0;Scount=0;
         for (int i = 0; i < 3; i++) word[i] = ' '; // word 배열을 초기화함
+    }
+
+    private static void initWord(){
+        for (int i = 0; i < 3; i++) word[i] = ' '; // word 배열을 초기화함
+    }
+
+    // 제스처를 초기화함
+    private static void initGesture() {
+        count = 0; // 점자 칸의 차례를 초기화
+        for (int i = 0; i < gesture.length; i++) {
+            gesture[i] = false; // 제스처 변수를 모두 거짓으로 초기화
+        }
+        SendMessageActivity.initBraille(); // 점자가 나타나는 텍스트를 모두 빈 텍스트로 초기화
+    }
+
+    //전부 초기화함
+    public static void init(){
+        initWord();
+        initSpecial();
+        initGesture();
+        count = 0;
+        braille = "";
+        text=' ';
+        at = 0;
     }
 }
