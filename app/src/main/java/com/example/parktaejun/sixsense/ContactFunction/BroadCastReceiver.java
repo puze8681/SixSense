@@ -84,11 +84,13 @@ public class BroadCastReceiver extends BroadcastReceiver {
                 case 0:
                     PhoneBookActivity.setEarPlugMode(false);
                     SMSContentActivity.setEarPlugMode(false);
+                    PushActivity.setEarPlugMode(false);
                     Log.d("111", "Headset is unplugged");
                     break;
                 case 1:
                     PhoneBookActivity.setEarPlugMode(true);
                     SMSContentActivity.setEarPlugMode(true);
+                    PushActivity.setEarPlugMode(false);
                     Log.d("111", "Headset is plugged");
                     break;
                 default:

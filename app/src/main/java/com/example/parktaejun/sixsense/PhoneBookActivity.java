@@ -39,7 +39,7 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
 
     private GestureDetectorCompat mDetector;
     private Vibrator vibrator;
-    BroadCastReceiver sms_receiver;
+    BroadCastReceiver receiver;
     Context context;
     ActivityPhoneBookBinding binding;
     public static ArrayList<PhoneBookData> PBitems = new ArrayList<>();
@@ -81,10 +81,10 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
         this.position = position;
 
 
-        sms_receiver = new BroadCastReceiver();
+        receiver = new BroadCastReceiver();
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
         intentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
-        registerReceiver(sms_receiver, intentFilter);
+        registerReceiver(receiver, intentFilter);
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -188,8 +188,8 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
     }
 
     private void initDisplay(int p) {
-        binding.phoneNumber.setText(PBitems.get(p).getPhoneNum());
-        binding.displayName.setText(PBitems.get(p).getDisplayName());
+        binding.number.setText(PBitems.get(p).getPhoneNum());
+        binding.name.setText(PBitems.get(p).getDisplayName());
     }
 
     private void nextDisplay(char g) {
@@ -217,11 +217,7 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
     }
 
     public static void setEarPlugMode(boolean b){
-        if (b){
-            epMode = true;
-        }else{
-            epMode = false;
-        }
+        epMode=b;
     }
 
     public static boolean getEarPlugMode(){
@@ -250,7 +246,7 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(sms_receiver);
+        unregisterReceiver(receiver);
 
         if(tts !=null){
             tts.stop();

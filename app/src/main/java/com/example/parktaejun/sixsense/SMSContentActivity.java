@@ -34,7 +34,7 @@ public class SMSContentActivity extends AppCompatActivity implements GestureDete
 
     private GestureDetectorCompat mDetector;
     private Vibrator vibrator;
-    BroadCastReceiver sms_receiver;
+    BroadCastReceiver receiver;
 
     Context context;
     ActivitySmscontentBinding binding;
@@ -62,8 +62,8 @@ public class SMSContentActivity extends AppCompatActivity implements GestureDete
         int position = 0;
         this.position = position;
 
-        sms_receiver = new BroadCastReceiver();
-        registerReceiver(sms_receiver, new IntentFilter());
+        receiver = new BroadCastReceiver();
+        registerReceiver(receiver, new IntentFilter());
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -122,11 +122,7 @@ public class SMSContentActivity extends AppCompatActivity implements GestureDete
     }
 
     public static void setEarPlugMode(boolean b){
-        if (b){
-            epMode = true;
-        }else{
-            epMode = false;
-        }
+        epMode = b;
     }
 
     public static boolean getEarPlugMode(){
@@ -134,8 +130,8 @@ public class SMSContentActivity extends AppCompatActivity implements GestureDete
     }
 
     private void initDisplay(int p) {
-        binding.phoneNumber.setText(SCitems.get(p).getPhoneNum());
-        binding.displayName.setText(SCitems.get(p).getDisplayName());
+        binding.number.setText(SCitems.get(p).getPhoneNum());
+        binding.name.setText(SCitems.get(p).getDisplayName());
         binding.body.setText(SCitems.get(p).getBody());
     }
 
@@ -186,7 +182,7 @@ public class SMSContentActivity extends AppCompatActivity implements GestureDete
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(sms_receiver);
+        unregisterReceiver(receiver);
     }
 
     @Override public boolean onTouchEvent(MotionEvent event) {this.mDetector.onTouchEvent(event);return super.onTouchEvent(event);}
