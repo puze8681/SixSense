@@ -11,37 +11,74 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.parktaejun.sixsense.PhoneBook.PhoneBookData;
 import com.example.parktaejun.sixsense.PhoneBookActivity;
 import com.example.parktaejun.sixsense.PushActivity;
 import com.example.parktaejun.sixsense.SMSContentActivity;
 import com.example.parktaejun.sixsense.SendMessageActivity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+
 public class BroadCastReceiver extends BroadcastReceiver {
-    public static String smsText;
+
+    PhoneBookData phoneBookData;
+    private static ArrayList<PhoneBookData> PBitems = new ArrayList<>();
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();
         String action = intent.getAction();
-        String str = ""; // 출력할 문자열 저장
         if (bundle != null) { // 수신된 내용이 있으면
-            // 실제 메세지는 Object타입의 배열에 PDU 형식으로 저장됨
-            Object [] pdus = (Object[])bundle.get("pdus");
-            SmsMessage[] msgs = new SmsMessage[pdus.length];
-            for (int i = 0; i < msgs.length; i++) {
+
+            PBitems = PhoneBookActivity.PBitems;
+
+            // SMS 메시지를 파싱합니다.
+            bundle = intent.getExtras();
+            Object messages[] = (Object[]) bundle.get("pdus");
+            SmsMessage smsMessage[] = new SmsMessage[messages.length];
+
+            for (int i = 0; i < messages.length; i++) {
                 // PDU 포맷으로 되어 있는 메시지를 복원합니다.
-                msgs[i] = SmsMessage
-                        .createFromPdu((byte[]) pdus[i]);
-                str += msgs[i].getOriginatingAddress()
-                        + "에게 문자왔음, " +
-                        msgs[i].getMessageBody().toString()
-                        +"\n";
+                smsMessage[i] = SmsMessage.createFromPdu((byte[]) messages[i]);
             }
-            smsText = str;
-            Toast.makeText(context, str, Toast.LENGTH_LONG).show();
+
+            // SMS 수신 시간 확인
+            Date curDate = new Date(smsMessage[0].getTimestampMillis());
+            String time = curDate.toString();
+            Log.d("문자 발신 시간", curDate.toString());
+
+            // SMS 발신 번호 확인
+            String number = smsMessage[0].getOriginatingAddress();
+            Log.d("문자 발신 번호", number);
+
+
+            // SMS 발신자 이름 확인
+            String person = "";
+            for(int i = 0; i < PBitems.size(); i++){
+                if(PBitems.get(i).getPhoneNum().equals(number)){
+                    person = PBitems.get(i).getDisplayName();
+                    break;
+                }else{
+                    person = "모르는 번호 입니다";
+                }
+            }
+
+            // SMS 메시지 확인
+            String message = smsMessage[0].getMessageBody().toString();
+            Log.d("문자 수신 내용", message);
+
+            Toast.makeText(context, "시간 : " + time + ", 발신자 : " + number + ", 내용 : " + message , Toast.LENGTH_LONG).show();
+
             Intent pushIntent = new Intent(context, PushActivity.class);
+            pushIntent.putExtra("time", time);
+            pushIntent.putExtra("number", number);
+            pushIntent.putExtra("person", person);
+            pushIntent.putExtra("body", message);
             context.startActivity(pushIntent);
-        }
-        if (action.equals(Intent.ACTION_HEADSET_PLUG)) {
+
+        } else if (action.equals(Intent.ACTION_HEADSET_PLUG)) {
             int state = intent.getIntExtra("state", -1);
             switch (state) {
                 case 0:
@@ -57,7 +94,7 @@ public class BroadCastReceiver extends BroadcastReceiver {
                 default:
                     Log.d("111", "I have no idea what the headset state is");
             }
-        }else if(action.equals("SMS_SENT_ACTION")){
+        } else if (action.equals("SMS_SENT_ACTION")) {
             switch (getResultCode()) {
                 case Activity.RESULT_OK:
                     // 전송 성공
@@ -80,7 +117,7 @@ public class BroadCastReceiver extends BroadcastReceiver {
                     Toast.makeText(context, "PDU Null", Toast.LENGTH_SHORT).show();
                     break;
             }
-        }else if(action.equals("SMS_DELIVERED_ACTION")){
+        } else if (action.equals("SMS_DELIVERED_ACTION")) {
             switch (getResultCode()) {
                 case Activity.RESULT_OK:
                     // 도착 완료

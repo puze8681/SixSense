@@ -494,7 +494,6 @@ public class Vibrate {
                 case 6:
                     shortVibe();
                     shortVibe();
-                    SMSreceiver.throwToast();
                     position++;
                     break;
                 //111

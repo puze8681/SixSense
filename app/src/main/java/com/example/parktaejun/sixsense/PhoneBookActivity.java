@@ -42,7 +42,7 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
     BroadCastReceiver sms_receiver;
     Context context;
     ActivityPhoneBookBinding binding;
-    private static ArrayList<PhoneBookData> PBitems = new ArrayList<>();
+    public static ArrayList<PhoneBookData> PBitems = new ArrayList<>();
     private static boolean epMode = false;
     TextToSpeech tts;
 
