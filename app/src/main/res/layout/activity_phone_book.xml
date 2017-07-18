@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp" />
         <TextView
+            android:background="@drawable/round_text"
             android:textSize="25sp"
             android:textAlignment="center"
             android:id="@+id/number"
@@ -28,6 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp" />
         <TextView
+            android:background="@drawable/round_text"
             android:textSize="50sp"
             android:textAlignment="center"
             android:id="@+id/name"

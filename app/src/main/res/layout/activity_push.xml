@@ -13,24 +13,35 @@
         android:weightSum="10"
         tools:context="com.example.parktaejun.sixsense.SMSFunction.ReceiveMessageActivity">
         <android.support.v4.widget.Space
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:layout_width="match_parent"
             android:layout_height="0dp" />
         <TextView
+            android:background="@drawable/round_text"
             android:textSize="25sp"
             android:textAlignment="center"
             android:id="@+id/time"
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="0dp" />
+        <android.support.v4.widget.Space
+            android:layout_weight="0.5"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
         <TextView
+            android:background="@drawable/round_text"
             android:textSize="25sp"
             android:textAlignment="center"
             android:id="@+id/person"
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="0dp" />
+        <android.support.v4.widget.Space
+            android:layout_weight="0.5"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
         <TextView
+            android:background="@drawable/round_text"
             android:textSize="25sp"
             android:textAlignment="center"
             android:id="@+id/number"
@@ -38,10 +49,11 @@
             android:layout_width="match_parent"
             android:layout_height="0dp" />
         <android.support.v4.widget.Space
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:layout_width="match_parent"
             android:layout_height="0dp" />
         <TextView
+            android:background="@drawable/round_text"
             android:textSize="50sp"
             android:textAlignment="center"
             android:id="@+id/body"
