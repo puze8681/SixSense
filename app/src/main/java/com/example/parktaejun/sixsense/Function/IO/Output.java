@@ -1,7 +1,8 @@
-package com.example.parktaejun.sixsense.MainFunction;
+package com.example.parktaejun.sixsense.Function.IO;
 
 import android.os.Handler;
 
+import com.example.parktaejun.sixsense.Function.Hangul;
 import com.example.parktaejun.sixsense.SMSFunction.SendMessageActivity;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Created by parktaejun on 2017. 6. 11..
  */
-public class Vibrate {
+public class Output {
 
     private static int position = 0; // whatBraille 리스트의 포지션값
     private static ArrayList<Integer> whatBraille = new ArrayList<Integer>(); //문장을 점자로 표현한것을 숫자로 나열한것
@@ -456,121 +457,96 @@ public class Vibrate {
     }
 
     //진동을 만드는 함수
-    public static void makeVibe(int c) {
-        Vibe(makeBraille(), c);
-
+    public static int makeVibe(int c) {
         //whatBraille의 크기만큼 진동을 출력했다면 whatBraille와 initWhereSound를 초기화함
-        if(position == whatBraille.size()){
+        if (position == whatBraille.size()) {
             whatBraille.clear();
             Hangul.initWhereSound();
         }
+
+        return Vibe(makeBraille(), c);
     }
 
     //진동을 출력하는 함수
-    private static void Vibe(ArrayList<Integer> s, int c) {
+    private static int Vibe(ArrayList<Integer> s, int c) {
         if (c == 1) {
             switch (s.get(position)) {
                 //000
                 case 0:
-                    break;
+                    return 0;
                 //001
                 case 1:
-                    break;
+                    return 0;
                 //010
                 case 2:
-                    break;
+                    return 0;
                 //011
                 case 3:
-                    break;
+                    return 0;
                 //100
                 case 4:
-                    shortVibe();
-                    break;
+                    return 1;
                 //101
                 case 5:
-                    shortVibe();
-                    break;
+                    return 1;
                 //110
                 case 6:
-                    shortVibe();
-                    shortVibe();
                     position++;
-                    break;
+                    return 11;
                 //111
                 case 7:
-                    shortVibe();
-                    shortVibe();
-                    shortVibe();
-
                     position++;
-                    break;
+                    return 111;
                 //null
                 case 8:
-                    break;
+                    return 0;
+                default:
+                    return 0;
             }
         } else if (c == 2) {
             switch (s.get(position)) {
                 //000
                 case 0:
-                    break;
+                    position++;
+                    return 0;
                 //001
                 case 1:
-                    longVibe();
-                    break;
+                    position++;
+                    return 2;
                 //010
                 case 2:
-                    shortVibe();
-                    break;
+                    position++;
+                    return 1;
                 //011
                 case 3:
-                    shortVibe();
-                    shortVibe();
-                    break;
+                    position++;
+                    return 11;
                 //100
                 case 4:
-                    break;
+                    position++;
+                    return 0;
                 //101
                 case 5:
-                    longVibe();
-                    break;
+                    position++;
+                    return 2;
                 //110
                 case 6:
-                    break;
+                    position++;
+                    return 0;
                 //111
                 case 7:
-                    break;
+                    position++;
+                    return 0;
                 //null
                 case 8:
-                    break;
+                    position++;
+                    return 0;
+                default:
+                    position++;
+                    return 0;
             }
-            position++;
+        } else {
+            return 0;
         }
-    }
-
-    //짧은 진동 (0.5초)
-    private static void shortVibe() {
-        SendMessageActivity.vibrator.vibrate(500);
-        breakVibe();
-    }
-
-    //긴 진동 (1.5초)
-    private static void longVibe() {
-        SendMessageActivity.vibrator.vibrate(1500);
-        breakVibe();
-    }
-
-    public static void splashVibe(){
-        SendMessageActivity.vibrator.vibrate(500);
-        breakVibe();
-        SendMessageActivity.vibrator.vibrate(500);
-    }
-
-    private static void breakVibe(){
-        Handler hd = new Handler();
-        hd.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-            }
-        }, 500);
     }
 }

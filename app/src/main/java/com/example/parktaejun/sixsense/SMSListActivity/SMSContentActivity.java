@@ -19,8 +19,8 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
-import com.example.parktaejun.sixsense.MainFunction.Hangul;
-import com.example.parktaejun.sixsense.MainFunction.Vibrate;
+import com.example.parktaejun.sixsense.Function.Hangul;
+import com.example.parktaejun.sixsense.Function.IO.Output;
 import com.example.parktaejun.sixsense.R;
 import com.example.parktaejun.sixsense.DataClass.SMSContentData;
 import com.example.parktaejun.sixsense.SMSFunction.SendMessageActivity;
@@ -190,7 +190,7 @@ public class SMSContentActivity extends AppCompatActivity implements GestureDete
         if(getEarPlugMode()){
             speakTTS(SCitems.get(position).getPhoneNum() + " " + SCitems.get(position).getDisplayName() + " " + SCitems.get(position).getBody());
         } else{
-            Vibrate.makeVibe(1);
+            Output.makeVibe(1);
         }
         return true;
     }
@@ -199,7 +199,7 @@ public class SMSContentActivity extends AppCompatActivity implements GestureDete
         if (Math.abs(e1.getX() - e2.getX()) < 250 && (e1.getY() - e2.getY() > 0)) {
             //위로 드래그
             Toast.makeText(getApplication(), "UP", Toast.LENGTH_SHORT).show();
-            if(!getEarPlugMode())Vibrate.makeVibe(2);
+            if(!getEarPlugMode()) Output.makeVibe(2);
         } else if (Math.abs(e1.getX() - e2.getX()) < 250 && (e2.getY() - e1.getY() > 0)) {
             //아래로 드래그
             Toast.makeText(getApplicationContext(), "DOWN", Toast.LENGTH_SHORT).show();

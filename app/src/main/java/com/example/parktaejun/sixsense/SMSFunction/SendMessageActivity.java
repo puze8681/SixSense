@@ -2,12 +2,10 @@ package com.example.parktaejun.sixsense.SMSFunction;
 
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
-import android.os.Vibrator;
+import android.os.Handler;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -21,15 +19,15 @@ import android.view.MotionEvent;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.parktaejun.sixsense.MainFunction.Braille;
+import com.example.parktaejun.sixsense.Function.IO.Input;
 import com.example.parktaejun.sixsense.R;
-import com.example.parktaejun.sixsense.databinding.ActivityMainBinding;
+import com.example.parktaejun.sixsense.databinding.ActivitySendMessageBinding;
 
 import java.util.ArrayList;
 
 public class SendMessageActivity extends Activity implements GestureDetector.OnGestureListener { //
 
-    ActivityMainBinding mainBinding;
+    ActivitySendMessageBinding mainBinding;
 
     private GestureDetectorCompat mDetector;
     private static TextView smsText;
@@ -42,7 +40,6 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
     private static TextView ind_four;
     private static TextView ind_five;
     private static TextView ind_six;
-    public static Vibrator vibrator;
     private Context mContext;
     public static boolean IsSendSMS = false;
     private static String SMS_Content = "";
@@ -68,8 +65,6 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
         ind_four = mainBinding.indexFour;
         ind_five = mainBinding.indexFive;
         ind_six = mainBinding.indexSix;
-        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
 
         TextWatcher textWatcher = new TextWatcher() {
             @Override
@@ -89,7 +84,7 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
         };
         smsText.addTextChangedListener(textWatcher);
 
-        countBraille.setText(Integer.toString((Braille.countCheck())));
+        countBraille.setText(Integer.toString((Input.countCheck())));
         mDetector = new GestureDetectorCompat(this, this);
     }
 
@@ -133,21 +128,21 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
     private void eraseText() {
         smsText.setText(smsText.getText().toString().substring(0, smsText.getText().toString().length()-2));
         initBraille();
-        Braille.init();
+        Input.init();
         countBraille.setText("0");
     }
 
     private void initText(){
         smsText.setText("");
         initBraille();
-        Braille.init();
+        Input.init();
         countBraille.setText("0");
     }
 
     private void init(){
         smsText.setText(smsText.getText().toString());
         initBraille();
-        Braille.init();
+        Input.init();
         countBraille.setText("0");
     }
 
@@ -197,7 +192,7 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
         if (Math.abs(e1.getX() - e2.getX()) < 250 && (e1.getY() - e2.getY() > 0)) {
             //위로 드래그
             Toast.makeText(getApplication(), "UP", Toast.LENGTH_SHORT).show();
-            switch (Braille.countCheck()) {
+            switch (Input.countCheck()) {
                 case 0:
                     ind_one.setBackgroundColor(Integer.parseInt("#222222"));
                     break;
@@ -217,12 +212,12 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
                     ind_six.setBackgroundColor(Integer.parseInt("#222222"));
                     break;
             }
-            Braille.recGesture(true);
+            Input.recGesture(true);
         } else if (Math.abs(e1.getX() - e2.getX()) < 250 && (e2.getY() - e1.getY() > 0)) {
             //아래로 드래그
             Toast.makeText(getApplicationContext(), "DOWN", Toast.LENGTH_SHORT).show();
-            countBraille.setText(Integer.toString((Braille.countCheck())));
-            switch (Braille.countCheck()) {
+            countBraille.setText(Integer.toString((Input.countCheck())));
+            switch (Input.countCheck()) {
                 case 0:
                     ind_one.setBackgroundColor(Integer.parseInt("#eeeeee"));
                     break;
@@ -242,7 +237,7 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
                     ind_six.setBackgroundColor(Integer.parseInt("#eeeeee"));
                     break;
             }
-            Braille.recGesture(false);
+            Input.recGesture(false);
         } else if (Math.abs(e1.getY() - e2.getY()) < 250 && (e1.getX() - e2.getX() > 0)) {
             //왼쪽 드래그
             Toast.makeText(getApplication(), " left : erase ", Toast.LENGTH_SHORT).show();
@@ -263,6 +258,7 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
         } else {
             Toast.makeText(getApplication(), "nothing on gesture", Toast.LENGTH_SHORT).show();
         }
+
         return true;
     }
 }

@@ -1,5 +1,6 @@
-package com.example.parktaejun.sixsense.MainFunction;
+package com.example.parktaejun.sixsense.Function.IO;
 
+import com.example.parktaejun.sixsense.Function.Hangul;
 import com.example.parktaejun.sixsense.SMSFunction.SendMessageActivity;
 
 import java.util.Arrays;
@@ -8,7 +9,7 @@ import java.util.Arrays;
  * Created by parktaejun on 2017. 6. 11..
  */
 
-public class Braille {
+public class Input {
     private static final String[] FirstSound = {
             "000100", "100100", "010100", "000010", "100010", "000110", "110110", "000101", "000011", "110100", "110010", "100110", "010110"
     };
@@ -45,9 +46,9 @@ public class Braille {
     public static void recGesture(boolean gesture) {
         if(count == 6)initGesture();// 제스처 변수를 초기화
         if (gesture) {
-            Braille.gesture[count] = true;
+            Input.gesture[count] = true;
         } else {
-            Braille.gesture[count] = false;
+            Input.gesture[count] = false;
         }
         count++;
         if(count == 6)isSix();// 배열 6칸이 다 찼는지 확인하여 isSix() 함수를 실행함
@@ -55,7 +56,7 @@ public class Braille {
 
     // 배열 6칸이 다 찼는지 확인하여 1. 점자를 형태소로 바꿈, 2. 제스처 변수를 초기화, 3. 메인액티비티에 텍스트 추가
     private static void isSix() {
-        gestureToBraille(Braille.gesture); // 점자를 형태소로 바꿈
+        gestureToBraille(Input.gesture); // 점자를 형태소로 바꿈
     }
 
     // 제스처를 점자(형태소)로 나타냄

@@ -1,4 +1,4 @@
-package com.example.parktaejun.sixsense.MainFunction;
+package com.example.parktaejun.sixsense.Function;
 
 /**
  * Created by parktaejun on 2017. 6. 11..

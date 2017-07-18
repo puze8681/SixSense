@@ -23,8 +23,8 @@ import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.example.parktaejun.sixsense.BroadCastReceiver.BroadCastReceiver;
-import com.example.parktaejun.sixsense.MainFunction.Hangul;
-import com.example.parktaejun.sixsense.MainFunction.Vibrate;
+import com.example.parktaejun.sixsense.Function.Hangul;
+import com.example.parktaejun.sixsense.Function.IO.Output;
 import com.example.parktaejun.sixsense.DataClass.PhoneBookData;
 import com.example.parktaejun.sixsense.R;
 import com.example.parktaejun.sixsense.SMSFunction.SendMessageActivity;
@@ -281,7 +281,7 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
         if(getEarPlugMode()){
             speakTTS(PBitems.get(position).getPhoneNum() + " " + PBitems.get(position).getDisplayName());
         } else{
-            Vibrate.makeVibe(1);
+            Output.makeVibe(1);
         }
         return true;
     }
@@ -290,7 +290,7 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
         if (Math.abs(e1.getX() - e2.getX()) < 250 && (e1.getY() - e2.getY() > 0)) {
             //위로 드래그
             Toast.makeText(getApplication(), "UP", Toast.LENGTH_SHORT).show();
-            if(!getEarPlugMode())Vibrate.makeVibe(2);
+            if(!getEarPlugMode()) Output.makeVibe(2);
         } else if (Math.abs(e1.getX() - e2.getX()) < 250 && (e2.getY() - e1.getY() > 0)) {
             //아래로 드래그
             Toast.makeText(getApplicationContext(), "DOWN", Toast.LENGTH_SHORT).show();
