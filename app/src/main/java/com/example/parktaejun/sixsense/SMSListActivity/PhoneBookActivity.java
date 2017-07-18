@@ -9,26 +9,25 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.ContactsContract;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.MotionEvent;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.parktaejun.sixsense.BroadCastReceiver.BroadCastReceiver;
 import com.example.parktaejun.sixsense.Font.Font;
-import com.example.parktaejun.sixsense.Function.Hangul;
-import com.example.parktaejun.sixsense.Function.IO.Output;
+import com.example.parktaejun.sixsense.GestureListener.GestureListenerPhoneBookActivity;
+import com.example.parktaejun.sixsense.IO.Hangul;
 import com.example.parktaejun.sixsense.DataClass.PhoneBookData;
 import com.example.parktaejun.sixsense.R;
-import com.example.parktaejun.sixsense.SMSFunction.SendMessageActivity;
 import com.example.parktaejun.sixsense.databinding.ActivityPhoneBookBinding;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -38,19 +37,22 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class PhoneBookActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
+public class PhoneBookActivity extends AppCompatActivity{
 
-    private GestureDetectorCompat mDetector;
-    private Vibrator vibrator;
+    private static Vibrator vibrator;
     BroadCastReceiver receiver;
-    Context context;
-    ActivityPhoneBookBinding binding;
+    static Context context;
+    static ActivityPhoneBookBinding binding;
     public static ArrayList<PhoneBookData> PBitems = new ArrayList<>();
     private static boolean epMode = false;
-    TextToSpeech tts;
+    static TextToSpeech tts;
 
-    int position = 0;
-    String returnValue = "";
+    LinearLayout gestureOverlay;
+    GestureListenerPhoneBookActivity gestureListener;
+    GestureDetector gestureDetector;
+
+    public static int position = 0;
+    static String returnValue = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +87,6 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
         this.position = position;
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
-        mDetector = new GestureDetectorCompat(this, this);
 
         SharedPreferences sharedPreferences = getSharedPreferences("hello world", Context.MODE_PRIVATE);
         if (!sharedPreferences.getBoolean("isFill", false)) {
@@ -163,13 +163,68 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
             }
         }
 
+        initGesture();
         initReceiver();
         initDisplay(p);
         initBraille();
         initTTS();
     }
 
-    private void initReceiver(){
+    public static void vibrate(int a) {
+        switch (a) {
+            case 0:
+                break;
+            case 1:
+                shortVibe();
+                break;
+            case 2:
+                longVibe();
+                break;
+            case 11:
+                shortVibe();
+                shortVibe();
+                break;
+            case 111:
+                shortVibe();
+                shortVibe();
+                shortVibe();
+                break;
+            default:
+                break;
+        }
+    }
+
+    //짧은 진동 (0.5초
+    private static void shortVibe() {
+        vibrator.vibrate(500);
+        breakVibe();
+    }
+
+    //긴 진동 (1.5초)
+    private static void longVibe() {
+        vibrator.vibrate(1500);
+        breakVibe();
+    }
+
+    private static void breakVibe() {
+        Handler hd = new Handler();
+        hd.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+            }
+        }, 250);
+    }
+
+    private void initGesture() { //activity gesture recognition
+        gestureOverlay = (LinearLayout) findViewById(R.id.activity_phone_book);
+        gestureListener = new GestureListenerPhoneBookActivity(PhoneBookActivity.this, gestureDetector);
+        if (gestureOverlay == null) {
+            Toast.makeText(PhoneBookActivity.this, "gestureOverlay object is null bro", Toast.LENGTH_SHORT).show();
+        }
+        gestureOverlay.setOnTouchListener(gestureListener);
+    }
+
+    private void initReceiver() {
         receiver = new BroadCastReceiver();
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
 //        intentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
@@ -178,29 +233,29 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
         registerReceiver(receiver, intentFilter);
     }
 
-    private void initTTS(){
-        tts=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+    private void initTTS() {
+        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                if(status != TextToSpeech.ERROR) {
+                if (status != TextToSpeech.ERROR) {
                     tts.setLanguage(Locale.KOREAN);
                 }
             }
         });
     }
 
-    private void speakTTS(String s){
-            //tts.setPitch((float) 0.1); //음량
-            //tts.setSpeechRate((float) 0.5); //재생속도
-            tts.speak(s, TextToSpeech.QUEUE_FLUSH, null);
-    }
-
-    private void initDisplay(int p) {
+    private static void initDisplay(int p) {
         binding.number.setText(PBitems.get(p).getPhoneNum());
         binding.name.setText(PBitems.get(p).getDisplayName());
     }
 
-    private void nextDisplay(char g) {
+    public static void speakTTS(String s) {
+        //tts.setPitch((float) 0.1); //음량
+        //tts.setSpeechRate((float) 0.5); //재생속도
+        tts.speak(s, TextToSpeech.QUEUE_FLUSH, null);
+    }
+
+    public static void nextDisplay(char g) {
         if (g == 'n') {
             position++;
             if (position > PBitems.size()) {
@@ -218,27 +273,31 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
                 initDisplay(position);
             }
         } else {
-            Toast.makeText(this, "Draw Gesture Again, Please", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Draw Gesture Again, Please", Toast.LENGTH_SHORT).show();
             vibrator.vibrate(1200);
         }
         initBraille();
     }
 
-    public static void setEarPlugMode(boolean b){
-        epMode=b;
+    public static void setEarPlugMode(boolean b) {
+        epMode = b;
     }
 
-    public static boolean getEarPlugMode(){
+    public static boolean getEarPlugMode() {
         return epMode;
     }
 
-    private void initBraille() {
-        if(Hangul.IsHangul(PBitems.get(position).getPhoneNum() + " " + PBitems.get(position).getDisplayName())) {
-            for (int i = 0; i < (PBitems.get(position).getPhoneNum() + " " + PBitems.get(position).getDisplayName()).length(); i++) {
-                String alphabet = Hangul.HangulAlphabet(Hangul.split((PBitems.get(position).getPhoneNum() + " " + PBitems.get(position).getDisplayName()).charAt(i)));
+    private static void initBraille() {
+        if (Hangul.IsHangul(getInfo())) {
+            for (int i = 0; i < getInfo().length(); i++) {
+                String alphabet = Hangul.HangulAlphabet(Hangul.split(getInfo().charAt(i)));
                 returnValue += alphabet;
             }
         }
+    }
+
+    public static String getInfo(){
+        return PBitems.get(position).getPhoneNum() + " " + PBitems.get(position).getDisplayName();
     }
 
     @Override
@@ -252,11 +311,11 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
     }
 
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
 //        unregisterReceiver(receiver);
 
-        if(tts !=null){
+        if (tts != null) {
             tts.stop();
             tts.shutdown();
         }
@@ -267,60 +326,9 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
         super.onDestroy();
         unregisterReceiver(receiver);
 
-        if(tts !=null){
+        if (tts != null) {
             tts.stop();
             tts.shutdown();
         }
-    }
-
-    @Override public boolean onTouchEvent(MotionEvent event) {
-        return this.mDetector.onTouchEvent(event);
-        //return super.onTouchEvent(event);
-    }
-    @Override public void onShowPress(MotionEvent e) {}
-    @Override public boolean onSingleTapUp(MotionEvent e) {return false;}
-    @Override public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {return false;}
-    @Override public void onLongPress(MotionEvent e) {}
-    @Override public boolean onDown(MotionEvent e) {
-        Toast.makeText(getApplicationContext(), "Touch", Toast.LENGTH_SHORT).show();
-        if(getEarPlugMode()){
-            speakTTS(PBitems.get(position).getPhoneNum() + " " + PBitems.get(position).getDisplayName());
-        } else{
-            Output.makeVibe(1);
-        }
-        return true;
-    }
-    @Override public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        Toast.makeText(getApplicationContext(), "Fling", Toast.LENGTH_SHORT).show();
-        if (Math.abs(e1.getX() - e2.getX()) < 250 && (e1.getY() - e2.getY() > 0)) {
-            //위로 드래그
-            Toast.makeText(getApplication(), "UP", Toast.LENGTH_SHORT).show();
-            if(!getEarPlugMode()) Output.makeVibe(2);
-        } else if (Math.abs(e1.getX() - e2.getX()) < 250 && (e2.getY() - e1.getY() > 0)) {
-            //아래로 드래그
-            Toast.makeText(getApplicationContext(), "DOWN", Toast.LENGTH_SHORT).show();
-        } else if (Math.abs(e1.getY() - e2.getY()) < 250 && (e1.getX() - e2.getX() > 0)) {
-            //왼쪽 드래그
-            Toast.makeText(getApplication(), "LEFT", Toast.LENGTH_SHORT).show();
-            nextDisplay('b');
-        } else if (Math.abs(e1.getY() - e2.getY()) < 250 && (e2.getX() - e1.getX() > 0)) {
-            //오른쪽 드래그
-            Toast.makeText(getApplicationContext(), "RIGHT", Toast.LENGTH_SHORT).show();
-            nextDisplay('n');
-        } else if ((e2.getX() - e1.getX() > 0) && (e2.getY() - e1.getY() > 0)) {
-            //오른쪽 아래 대각선 드래그
-            Toast.makeText(getApplicationContext(), "message sending activity", Toast.LENGTH_SHORT).show();
-            Intent smActivityIntent = new Intent(PhoneBookActivity.this, SendMessageActivity.class);
-            smActivityIntent.putExtra("number", this.PBitems.get(position).getPhoneNum());
-            startActivity(smActivityIntent);
-        } else if ((e1.getX() - e2.getX() > 0) && (e1.getY() - e2.getY() > 0)) {
-            //왼쪽 위 대각선 드래그
-            Toast.makeText(getApplicationContext(), "message sending activity", Toast.LENGTH_SHORT).show();
-            Intent scActivityIntent = new Intent(PhoneBookActivity.this, SMSContentActivity.class);
-            startActivity(scActivityIntent);
-        } else {
-            Toast.makeText(getApplication(), "nothing on gesture", Toast.LENGTH_SHORT).show();
-        }
-        return true;
     }
 }

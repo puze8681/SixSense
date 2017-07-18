@@ -9,7 +9,6 @@ import android.os.Vibrator;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.example.parktaejun.sixsense.Function.IO.Output;
 import com.example.parktaejun.sixsense.SMSListActivity.PhoneBookActivity;
 
 public class SplashActivity extends Activity {

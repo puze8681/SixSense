@@ -1,9 +1,4 @@
-package com.example.parktaejun.sixsense.Function.IO;
-
-import android.os.Handler;
-
-import com.example.parktaejun.sixsense.Function.Hangul;
-import com.example.parktaejun.sixsense.SMSFunction.SendMessageActivity;
+package com.example.parktaejun.sixsense.IO;
 
 import java.util.ArrayList;
 

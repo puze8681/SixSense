@@ -1,6 +1,5 @@
-package com.example.parktaejun.sixsense.Function.IO;
+package com.example.parktaejun.sixsense.IO;
 
-import com.example.parktaejun.sixsense.Function.Hangul;
 import com.example.parktaejun.sixsense.SMSFunction.SendMessageActivity;
 
 import java.util.Arrays;
