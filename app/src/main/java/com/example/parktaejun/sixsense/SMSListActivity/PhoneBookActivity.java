@@ -170,9 +170,9 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
     private void initReceiver(){
         receiver = new BroadCastReceiver();
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
-        intentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
-        intentFilter.addAction("SMS_DELIVERED_ACTION");
-        intentFilter.addAction("SMS_SENT_ACTION");
+//        intentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
+//        intentFilter.addAction("SMS_DELIVERED_ACTION");
+//        intentFilter.addAction("SMS_SENT_ACTION");
         registerReceiver(receiver, intentFilter);
     }
 
@@ -252,7 +252,7 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
     @Override
     protected void onPause(){
         super.onPause();
-        unregisterReceiver(receiver);
+//        unregisterReceiver(receiver);
 
         if(tts !=null){
             tts.stop();

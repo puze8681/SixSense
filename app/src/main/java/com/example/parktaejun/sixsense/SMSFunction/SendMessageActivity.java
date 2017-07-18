@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class SendMessageActivity extends Activity implements GestureDetector.OnGestureListener { //
 
     ActivitySendMessageBinding mainBinding;
-
+    private String number;
     private GestureDetectorCompat mDetector;
     private static TextView smsText;
     private TextView countBraille;
@@ -65,6 +65,10 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
         ind_four = mainBinding.indexFour;
         ind_five = mainBinding.indexFive;
         ind_six = mainBinding.indexSix;
+
+        Intent getIntent = new Intent();
+        String number = getIntent.getExtras().getString("number");
+        setNumber(number);
 
         TextWatcher textWatcher = new TextWatcher() {
             @Override
@@ -108,6 +112,13 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
         stt.startListening(sttIntent);
     }
 
+    private void setNumber(String n){
+        number = n;
+    }
+
+    private String getNumber(){
+        return number;
+    }
     //텍스트뷰에 텍스트를 추가함
     public static void addFirstText(char t) {
         smsText.setText(smsText.getText().toString() + t);
@@ -147,7 +158,7 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
     }
 
     private void sendSMS(String s) {
-        String smsNum = "01097908310";
+        String smsNum = getNumber();
         String smsText = s;
 
         if (smsNum.length() > 0 && smsText.length() > 0) {
