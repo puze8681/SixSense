@@ -19,6 +19,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+import com.example.parktaejun.sixsense.Font.Font;
 import com.example.parktaejun.sixsense.Function.Hangul;
 import com.example.parktaejun.sixsense.Function.IO.Output;
 import com.example.parktaejun.sixsense.R;
@@ -55,6 +56,7 @@ public class SMSContentActivity extends AppCompatActivity implements GestureDete
     }
 
     private void initApp(int p) {
+        Font.setGlobalFont(this, getWindow().getDecorView());
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_smscontent);
 

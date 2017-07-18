@@ -13,6 +13,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+import com.example.parktaejun.sixsense.Font.Font;
 import com.example.parktaejun.sixsense.Function.Hangul;
 import com.example.parktaejun.sixsense.Function.IO.Output;
 import com.example.parktaejun.sixsense.R;
@@ -42,7 +43,7 @@ public class ReceiveMessageActivity extends AppCompatActivity implements Gesture
     }
 
     private void initApp() {
-
+        Font.setGlobalFont(this, getWindow().getDecorView());
         binding = DataBindingUtil.setContentView(this, R.layout.activity_push);
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);

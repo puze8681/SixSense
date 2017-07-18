@@ -23,6 +23,7 @@ import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.example.parktaejun.sixsense.BroadCastReceiver.BroadCastReceiver;
+import com.example.parktaejun.sixsense.Font.Font;
 import com.example.parktaejun.sixsense.Function.Hangul;
 import com.example.parktaejun.sixsense.Function.IO.Output;
 import com.example.parktaejun.sixsense.DataClass.PhoneBookData;
@@ -76,6 +77,7 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
     }
 
     private void initApp(int p) {
+        Font.setGlobalFont(this, getWindow().getDecorView());
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_phone_book);
 
@@ -271,7 +273,10 @@ public class PhoneBookActivity extends AppCompatActivity implements GestureDetec
         }
     }
 
-    @Override public boolean onTouchEvent(MotionEvent event) {this.mDetector.onTouchEvent(event);return super.onTouchEvent(event);}
+    @Override public boolean onTouchEvent(MotionEvent event) {
+        return this.mDetector.onTouchEvent(event);
+        //return super.onTouchEvent(event);
+    }
     @Override public void onShowPress(MotionEvent e) {}
     @Override public boolean onSingleTapUp(MotionEvent e) {return false;}
     @Override public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {return false;}

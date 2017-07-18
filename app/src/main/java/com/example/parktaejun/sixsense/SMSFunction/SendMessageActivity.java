@@ -19,6 +19,7 @@ import android.view.MotionEvent;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.parktaejun.sixsense.Font.Font;
 import com.example.parktaejun.sixsense.Function.IO.Input;
 import com.example.parktaejun.sixsense.R;
 import com.example.parktaejun.sixsense.databinding.ActivitySendMessageBinding;
@@ -54,6 +55,8 @@ public class SendMessageActivity extends Activity implements GestureDetector.OnG
     }
 
     private void initApp(){
+        Font.setGlobalFont(this, getWindow().getDecorView());
+
         mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_send_message);
         Toast.makeText(getApplicationContext(), "Run", Toast.LENGTH_SHORT).show();
 
