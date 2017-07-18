@@ -53,28 +53,82 @@ public class Hangul {
     }
 
     public static int[] split(char c) {
-        int sub[] = new int[3];
-        sub[0] = (c - 0xAC00) / (21 * 28); //초성
-        sub[1] = ((c - 0xAC00) % (21 * 28)) / 28; //중성
-        sub[2] = (c - 0xAC00) % (28);//종성
-        return sub;
+        if(Hangul.IsHangul(c)) {
+            int sub[] = new int[3];
+            sub[0] = (c - 0xAC00) / (21 * 28); //초성
+            sub[1] = ((c - 0xAC00) % (21 * 28)) / 28; //중성
+            sub[2] = (c - 0xAC00) % (28);//종성
+            return sub;
+        }
+        else {
+            int t[] = new int[]{(c-0xAC00)};
+            return t;
+        }
     }
 
     public static String HangulAlphabet(int[] c) {
-        char[] rt = new char[3];
-        if (c[0] == 0) rt[0] = ' ';
-        else rt[0] = FirstSound[c[0]];
-        if (c[1] == 0) rt[1] = ' ';
-        else rt[1] = MiddleSound[c[1]];
-        if (c[2] == 0) rt[2] = ' ';
-        else rt[2] = LastSound[c[2]];
         String returnString = "";
-        returnString = returnString + rt[0] + rt[1] + rt[2];
-
-        whereSound[0][position] = rt[0];
-        whereSound[1][position] = rt[1];
-        whereSound[2][position] = rt[2];
-
+        if(c.length > 2) {
+            char[] rt = new char[3];
+            if (c[0] == 0) rt[0] = ' ';
+            else rt[0] = FirstSound[c[0]];
+            if (c[1] == 0) rt[1] = ' ';
+            else rt[1] = MiddleSound[c[1]];
+            if (c[2] == 0) rt[2] = ' ';
+            else rt[2] = LastSound[c[2]];
+            returnString = returnString + rt[0] + rt[1] + rt[2];
+            whereSound[0][position] = rt[0];
+            whereSound[1][position] = rt[1];
+            whereSound[2][position] = rt[2];
+        }
+        else
+        {
+            switch(c[0])
+            {
+                case -0xABD0:
+                    whereSound[0][position] = '0';
+                    returnString += '0';
+                    break;
+                case -0xABCF:
+                    whereSound[0][position] = '1';
+                    returnString += '1';
+                    break;
+                case -0xABCE:
+                    whereSound[0][position] = '2';
+                    returnString += '2';
+                    break;
+                case -0xABCD:
+                    whereSound[0][position] = '3';
+                    returnString += '3';
+                    break;
+                case -0xABCC:
+                    whereSound[0][position] = '4';
+                    returnString += '4';
+                    break;
+                case -0xABCB:
+                    whereSound[0][position] = '5';
+                    returnString += '5';
+                    break;
+                case -0xABCA:
+                    whereSound[0][position] = '6';
+                    returnString += '6';
+                    break;
+                case -0xABC9:
+                    whereSound[0][position] = '7';
+                    returnString += '7';
+                    break;
+                case -0xABC8:
+                    whereSound[0][position] = '8';
+                    returnString += '8';
+                    break;
+                case -0xABC7:
+                    whereSound[0][position] = '9';
+                    returnString += '9';
+                    break;
+            }
+            whereSound[1][position] = ' ';
+            whereSound[2][position] = ' ';
+        }
         position++;
         return returnString;
     }
