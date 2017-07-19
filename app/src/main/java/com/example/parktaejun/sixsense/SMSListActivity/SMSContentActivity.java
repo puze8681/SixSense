@@ -157,6 +157,7 @@ public class SMSContentActivity extends AppCompatActivity {
         Cursor c = cr.query(allMessage, new String[] { "_id", "thread_id", "address", "person", "date", "body" }, null, null, "date DESC");
 
         String string = "";
+
         int count = 0;
         while (c.moveToNext()) {
             long messageId = c.getLong(0);
@@ -243,6 +244,10 @@ public class SMSContentActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
         super.onDestroy();
     }
 

@@ -51,7 +51,6 @@ public class ReceiveMessageActivity extends AppCompatActivity {
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-
         initGesture();
         initDisplay();
         initBraille();
@@ -166,11 +165,11 @@ public class ReceiveMessageActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
         if (tts != null) {
             tts.stop();
             tts.shutdown();
         }
+        super.onDestroy();
     }
+
 }

@@ -1,6 +1,7 @@
 package com.example.parktaejun.sixsense.SMSListActivity;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -8,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -15,6 +17,7 @@ import android.provider.ContactsContract;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,10 +40,11 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class PhoneBookActivity extends AppCompatActivity{
+public class PhoneBookActivity extends AppCompatActivity {
 
+    BroadcastReceiver receiver = new BroadCastReceiver();
+    IntentFilter intentFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
     private static Vibrator vibrator;
-    BroadCastReceiver receiver;
     static Context context;
     static ActivityPhoneBookBinding binding;
     public static ArrayList<PhoneBookData> PBitems = new ArrayList<>();
@@ -67,13 +71,19 @@ public class PhoneBookActivity extends AppCompatActivity{
                     ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED ||
                     ContextCompat.checkSelfPermission(this, Manifest.permission.MODIFY_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    Log.d("puze","PERMISSION");
                     requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CONTACTS,
                             Manifest.permission.INTERNET, Manifest.permission.RECORD_AUDIO, Manifest.permission.MODIFY_PHONE_STATE}, 200);
+                    Log.d("puze","initApp0");
+                    initApp(position);
                 }
             } else {
+                Log.d("puze","initApp1");
                 initApp(position);
             }
+            initApp(position);
         } else {
+            Log.d("puze","initApp2");
             initApp(position);
         }
     }
@@ -88,86 +98,53 @@ public class PhoneBookActivity extends AppCompatActivity{
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("hello world", Context.MODE_PRIVATE);
-        if (!sharedPreferences.getBoolean("isFill", false)) {
-
-            String[] arrProjection = {
-                    ContactsContract.Contacts._ID,
-                    ContactsContract.Contacts.DISPLAY_NAME
-            };
-
-            Cursor clsCursor = context.getContentResolver().query(
-                    ContactsContract.Contacts.CONTENT_URI,
-                    arrProjection,
-                    ContactsContract.Contacts.HAS_PHONE_NUMBER + "= 1",
-                    null, null
-            );
-
-            SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
-
-            while (clsCursor.moveToNext()) {
-                PhoneBookData data = new PhoneBookData();
-
-                String name;
-                String num = null;
-
-                String contactID = clsCursor.getString(0);
-                Log.d("puze", "연락처 ID : " + clsCursor.getString(0));
-                Log.d("puze", "연락처 이름 : " + clsCursor.getString(1));
-
-                Cursor nCursor = context.getContentResolver().query(
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                        new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER},
-                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactID,
-                        null, null
-                );
-                while (nCursor.moveToNext()) {
-                    Log.d("puze", "연락처 번호 : " + nCursor.getString(0));
-                    num = nCursor.getString(0);
-                }
-
-                name = clsCursor.getString(1);
-
-                String nnum = num.replace("-", "");
-
-                sharedPreferencesEditor.putString(num, name);
-                sharedPreferencesEditor.putString(nnum, name);
-                sharedPreferencesEditor.apply();
-
-                data.setDisplayName(name);
-                data.setPhoneNum(num);
-
-                PBitems.add(data);
-
-                nCursor.close();
-            }
-            clsCursor.close();
-
-            Gson gson = new Gson();
-            String json = gson.toJson(PBitems);
-            Log.d("puze", json);
-            sharedPreferencesEditor.putString("contacts", json);
-            sharedPreferencesEditor.apply();
-
-            sharedPreferencesEditor.putBoolean("isFill", true);
-            sharedPreferencesEditor.apply();
-        } else {
-            String json = sharedPreferences.getString("contacts", null);
-            Log.d("puze", json);
-            if (json != null) {
-                Gson gson = new Gson();
-                PBitems = gson.fromJson(json, new TypeToken<List<PhoneBookData>>() {
-                }.getType());
-                Log.d("puze", PBitems.get(0).toString());
-                PBitems.addAll(PBitems);
-            }
-        }
+        initContacts();
+        Log.d("puze","initContacts");
 
         initGesture();
+        Log.d("puze","initGesture");
+
         initReceiver();
+        Log.d("puze","initReceiver");
+
         initDisplay(p);
+        Log.d("puze","initDisplay");
+
         initBraille();
+        Log.d("puze","initBraille");
+
         initTTS();
+        Log.d("puze","initTTS");
+
+    }
+
+    private void initContacts(){
+        Log.d("puze","log");
+        Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+
+        String[] projection = new String[] {
+                ContactsContract.CommonDataKinds.Phone.CONTACT_ID, // 연락처 ID -> 사진 정보 가져오는데 사용
+                ContactsContract.CommonDataKinds.Phone.NUMBER,        // 연락처
+                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME }; // 연락처 이름.
+
+        String[] selectionArgs = null;
+
+        String sortOrder = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME
+                + " COLLATE LOCALIZED ASC";
+
+        Cursor contactCursor = managedQuery(uri, projection, null,
+                selectionArgs, sortOrder);
+
+        if (contactCursor.moveToFirst()) {
+            do {
+                String phonenumber = contactCursor.getString(1).replaceAll("-", "");
+                PhoneBookData acontact = new PhoneBookData();
+                acontact.setPhoneNum(phonenumber);
+                acontact.setDisplayName(contactCursor.getString(2));
+
+                PBitems.add(acontact);
+            } while (contactCursor.moveToNext());
+        }
     }
 
     public static void vibrate(int a) {
@@ -226,7 +203,7 @@ public class PhoneBookActivity extends AppCompatActivity{
 
     private void initReceiver() {
         receiver = new BroadCastReceiver();
-        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
+        intentFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
 //        intentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
 //        intentFilter.addAction("SMS_DELIVERED_ACTION");
 //        intentFilter.addAction("SMS_SENT_ACTION");
@@ -296,7 +273,7 @@ public class PhoneBookActivity extends AppCompatActivity{
         }
     }
 
-    public static String getInfo(){
+    public static String getInfo() {
         return PBitems.get(position).getPhoneNum() + " " + PBitems.get(position).getDisplayName();
     }
 
@@ -311,24 +288,42 @@ public class PhoneBookActivity extends AppCompatActivity{
     }
 
     @Override
+    protected void onPostResume(){
+        registerReceiver(receiver, intentFilter);
+        super.onPostResume();
+    }
+
+    @Override
     protected void onPause() {
-        super.onPause();
-//        unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
 
         if (tts != null) {
             tts.stop();
             tts.shutdown();
         }
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
+        super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
 
         if (tts != null) {
             tts.stop();
             tts.shutdown();
         }
+
+        super.onDestroy();
     }
 }

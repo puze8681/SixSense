@@ -26,7 +26,7 @@ public class BroadCastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();
         String action = intent.getAction();
-        if (bundle != null) { // 수신된 내용이 있으면
+        if (action.equals("android.provider.Telephony.SMS_RECEIVED")) { // 수신된 내용이 있으면
 
             PBitems = PhoneBookActivity.PBitems;
 

@@ -10,6 +10,9 @@ public class Output {
     private static int position = 0; // whatBraille 리스트의 포지션값
     private static ArrayList<Integer> whatBraille = new ArrayList<Integer>(); //문장을 점자로 표현한것을 숫자로 나열한것
 
+    static int len = 0;
+    static char[][] whereSound = {};
+
     private static void put(int i) {
         whatBraille.add(i);
     }
@@ -36,8 +39,11 @@ public class Output {
     }
 
     public static ArrayList<Integer> makeBraille() {
-        char[][] whereSound = Hangul.getWhere(); //Hangul 클래스의 whereSound 변수를 받아옴
-        int len = whereSound[0].length; // whereSound의 길이 (글자의 길이)
+        whereSound = Hangul.getWhere(); //Hangul 클래스의 whereSound 변수를 받아옴
+        // whereSound의 길이 (글자의 길이)
+        for(int i = 0; whereSound[i]!=null;i++){
+            len++;
+        }
         for (int i = 0; i < len; i++) {
             for (int j = 0; j < 3; j++) {
                 //초성만 있는 경우
@@ -454,7 +460,7 @@ public class Output {
     //진동을 만드는 함수
     public static int makeVibe(int c) {
         //whatBraille의 크기만큼 진동을 출력했다면 whatBraille와 initWhereSound를 초기화함
-        if (position == whatBraille.size()) {
+        if (position == makeBraille().size()) {
             whatBraille.clear();
             Hangul.initWhereSound();
         }
